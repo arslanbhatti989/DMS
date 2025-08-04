@@ -1,0 +1,120 @@
+﻿@model IEnumerable<DMS.Models.Project>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            @* <a asp-action="Create" class="btn btn-primary  mb-1" style="margin-bottom:20px; margin-top:10px; margin-left:25px; width:150px">Add New</a> *@
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+                    <div class="d-md-flex justify-content-between">
+                        <h2 class="text-md">Projects</h2>
+                        <a asp-action="AddUpdate" asp-controller="Project" class="btn btn-sm btn-primary">Create</a>
+                    </div>
+                    <div class="table-reponsive">
+                        <table id="myTable" class="table table-row table-theme v-middle dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Icon</th>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="/admin/assets/img/a0.png" class="img-fluid" height="50" width="50" />
+                                        </td>
+                                        <td>
+                                            <h2 class="text-md">@item.Project_Name</h2>
+                                            <a href="#" class="btn btn-primary i-con-h-a">  Project Dashboard</a>
+                                            <a href="#" role="button" data-toggle="modal" data-target="#modalPlans" class="btn btn-secondary i-con-h-a"> Payment Plans</a>
+                                        </td>
+                                        <td>
+                                            <a href="/project/addUpdate/@item.Project_Id" class="text-primary i-con-h-a"><i class="i-con i-con-edit"><i></i></i></a>
+                                            <a href="/project/delete/@item.Project_Id" onclick="return confirm('Are you sure you want to delete this project?')" class="text-danger i-con-h-a"><i class="i-con i-con-trash"><i></i></i></a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="modalPlans" class="modal" data-backdrop="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Plan Details</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md mb-3">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" type="text" name="Title" placeholder="Title" />
+                    </div>
+                    <div class="col-md mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-control" data-plugin="select2" name="Type">
+                            <option value="">Type</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label">Discount</label>
+                        <input class="form-control" type="text" name="Discount" placeholder="Discount" />
+                    </div>
+                </div>
+                <h2 class="text-md">Installments <button class="btn btn-lg btn-raised btn-wave btn-icon btn-rounded mb-2 i-con-h-a blue"><span><i class="i-con i-con-plus b-2x"></i></span></button></h2>
+                <div class="plans">
+                    <div class="row">
+                        <div class="col-md mb-3">
+                            <label class="form-label">Installment Title</label>
+                            <input class="form-control" type="text" name="InstallmentTitle" placeholder="Title" />
+                        </div>
+                        <div class="col-md mb-3">
+                            <label class="form-label">Description</label>
+                            <input class="form-control" type="text" name="InstallmentDescription" placeholder="Description" />
+                        </div>
+                        <div class="col-md mb-3">
+                            <label class="form-label">Installment Percent</label>
+                            <input class="form-control" type="text" name="Percent" placeholder="Percent" />
+                        </div>
+                        <div class="col-md-1 align-self-center">
+                            <button class="btn btn-danger btn-sm i-con-h-a"><i class="i-con i-con-trash"><i></i></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#btnProjects').addClass("open");
+            $('#btnManageProjects').addClass("active");
+            $('#myTable').DataTable(); // Initialize DataTables
+
+        });
+    </script>
+ }

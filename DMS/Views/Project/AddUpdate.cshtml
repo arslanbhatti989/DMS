@@ -1,0 +1,90 @@
+﻿@model DMS.Models.Project
+@{
+    ViewData["Title"] = "Add Update";
+}
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+
+        <h4 class="text-md mb-3">@(Model.Project_Id == 0 ? "Add" : "Update") Project</h4>
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="AddUpdate" asp-controller="Project" method="post">
+                    <input asp-for="Project_Id" type="hidden" />
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Project Name</label>
+                            <input class="form-control" asp-for="Project_Name" required />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Project Address</label>
+                            <input class="form-control" asp-for="Project_Address" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Project Used</label>
+                            <select asp-for="Project_Used" class="form-control">
+                                <option value="Mixed">Mixed</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Total Floors</label>
+                            <input class="form-control" asp-for="Total_Floors" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Total Units</label>
+                            <input class="form-control" asp-for="Total_Units" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Project Land Area</label>
+                            <input class="form-control" asp-for="Project_Land_Area" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Constructed Area</label>
+                            <input class="form-control" asp-for="Constructed_Area" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Plot Number</label>
+                            <input class="form-control" asp-for="Plot_Number" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Saleable Area</label>
+                            <input class="form-control" asp-for="Saleable_Area" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Construction Status</label>
+                            <select asp-for="Construction_Status" class="form-control">
+                                <option value="Planned">Planned</option>
+                                <option value="Under Construction">Under Construction</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Completion Date</label>
+                            <input class="form-control" type="date" asp-for="Completion_Date" />
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">Country</label>
+                            <select asp-for="Country_Id" class="form-control" asp-items="ViewBag.CountryList">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label class="form-label">City</label>
+                            <select asp-for="City_Id" class="form-control" asp-items="ViewBag.CityList">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn btn-primary">@(Model.Project_Id == 0 ? "Create" : "Update")</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model DMS.Models.ViewModels.CountryCityListViewModel
+@{
+    int s = ViewBag.no;
+     
+}
+<div class="BuyerForms">
+    <div class="d-flex align-items-center justify-content-between">
+        <h2 class="text-md my-3">Buyer Information</h2>
+        <button type="button" class="btn btn-danger btn-DeleteBuyerNew btn-sm">
+            <i class="i-con i-con-trash"><i></i></i>
+        </button>
+    </div>
+    <div class="form-group">
+        <label class="form-label">
+            <input class="MainBuyer" type="radio" value="true" name="UnitBuyers[@s].IsMainBuyer" /> Is Main Buyer
+        </label>
+    </div>
+    <div class=" form-group">
+        <label class="form-label">Buyer Type</label>
+        <select class="form-control BuyerType" name="UnitBuyers[@s].BuyerType">
+            <option value="Individual">Individual</option>
+            <option value="Company">Company</option>
+        </select>
+    </div> 
+    <!-- Individual Fields -->
+    <div class="individual-fields">
+        <div class="row ind_1">
+            <input type="hidden" name="UnitBuyers[@s].Person_Id" value="" />
+            <div class="form-group col-md-3"><label>First Name</label><input name="UnitBuyers[@s].PersonFirstName" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Last Name</label><input name="UnitBuyers[@s].PersonLastName" class="form-control"></div>
+            <div class="form-group col-md-3">
+                <label>Nationality</label>
+                <select name="PersonNationalityCountry_Id" class="form-control">
+                    <option value="">Select</option>
+                    @foreach (var cc in Model.Countries ?? new List<Country>())
+                    {
+                        <option value="@cc.Country_Id">@cc.Country_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-3"><label>Passport No</label><input name="UnitBuyers[@s].PersonPassport_Number" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Passport Expiry</label><input type="date" name="UnitBuyers[@s].PersonPassport_Expiry_Date" class="form-control"></div>
+             
+                <div class="form-group col-md-3">
+                    <label>Nationality (from Passport)</label>
+                    <select name="UnitBuyers[0].PersonPassportNationality_Id" class="form-control">
+                        <option value="">Select</option>
+                        @foreach (var cc in Model.Countries ?? new List<Country>())
+                        {
+                            <option value="@cc.Country_Id">@cc.Country_Name</option>
+                        }
+                    </select>
+                </div> 
+            <div class="form-group col-md-3">
+                <label>Passport Country of Issue</label>
+                <select name="UnitBuyers[0].PersonPassportCountry_Id" class="form-control">
+                    <option value="">Select</option>
+                    @foreach (var cc in Model.Countries ?? new List<Country>())
+                    {
+                        <option value="@cc.Country_Id">@cc.Country_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-3"><label>Emirates ID</label><input name="UnitBuyers[@s].PersonEmirates_Id_Number" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Emirates ID Expiry</label><input type="date" name="UnitBuyers[@s].PersonEmireate_Id_Expiry_Date" class="form-control"></div>
+            <div class="form-group col-md-3"><label>DOB</label><input type="date" name="UnitBuyers[@s].PersonDOB" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Address</label><input name="UnitBuyers[@s].PersonAddress_Line_1" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Contact</label><input name="UnitBuyers[@s].PersonContactPerson" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Email</label><input name="UnitBuyers[@s].PersonEmail" type="email" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Marital Status</label><input name="UnitBuyers[@s].PersonMarital" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Occupation</label><input name="UnitBuyers[@s].PersonOccupation" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Employer</label><input name="UnitBuyers[@s].PersonEmployer" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" name="UnitBuyers[@s].PersonFundsFile" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Ownership %</label><input type="number" name="UnitBuyers[@s].PersonOwnership" min="0" max="100" class="form-control"></div>
+        </div>
+    </div>
+
+    <!-- Company Fields -->
+    <div class="company-fields d-none">
+        <div class="row comp_1">
+            <input type="hidden" name="UnitBuyers[@s].Country_Id" value="" />
+            <div class="form-group col-md-3"><label>Company Name</label><input name="UnitBuyers[@s].Company_Name" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Trade License Number</label><input name="UnitBuyers[@s].CompanyTrade_License_Number" class="form-control"></div>
+            <div class="form-group col-md-3"><label>License Expiry Date</label><input type="date" name="UnitBuyers[@s].CompanyLicense_Expiry_Date" class="form-control"></div>
+            <div class="form-group col-md-3">
+                <label>Country</label>
+                <select name="UnitBuyers[@s].CompanyCountry_Id" class="form-control">
+                    <option value="">Select</option>
+                    @foreach (var cc in Model.Countries ?? new List<Country>())
+                    {
+                        <option value="@cc.Country_Id">@cc.Country_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>City</label> 
+                <select name="UnitBuyers[@s].CompanyCity_Id" class="form-control">
+                    <option value="">Select</option>
+                    @foreach (var cc in Model.Cities ?? new List<City>())
+                    {
+                        <option value="@cc.City_Id">@cc.City_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-3"><label>Address</label><input name="UnitBuyers[@s].CompanyAddress_Line_1" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Zip Code</label><input name="UnitBuyers[@s].CompanyZip_Code" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" name="UnitBuyers[@s].CompanyProofOfFundsFile" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Ownership %</label><input type="number" name="UnitBuyers[@s].CompanyOwnership" min="0" max="100" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Signatory Name</label><input name="UnitBuyers[@s].CompanyContact_Person_Name" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Designation</label><input name="UnitBuyers[@s].CompanyContact_Person_Designation" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Signatory Emirates ID</label><input name="UnitBuyers[@s].CompanyContact_Person_Emirates_Id" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Signatory Passport</label><input name="UnitBuyers[@s].CompanyContact_Person_Passport" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Contact Person Email</label><input name="UnitBuyers[@s].CompanyContact_Person_Email" type="email" class="form-control"></div>
+            <div class="form-group col-md-3"><label>Contact Person Phone</label><input name="UnitBuyers[@s].CompanyContact_Person_Phone" type="number" class="form-control"></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".btn-DeleteBuyerNew").click(function(){
+        ///debugger;
+        $(this).closest('.BuyerForms').remove();
+    })
+    $(".BuyerType").on('change', function () 
+    {
+        var Vals = $(this).val();
+        if (Vals == "Individual")
+        {
+            $(this).closest('.BuyerForms').find(".company-fields").addClass("d-none");
+            $(this).closest('.BuyerForms').find(".individual-fields").removeClass("d-none");
+        }
+        else if (Vals == "Company")
+        {
+            $(this).closest('.BuyerForms').find(".company-fields").removeClass("d-none");
+            $(this).closest('.BuyerForms').find(".individual-fields").addClass("d-none");
+        }
+    });
+    $(".MainBuyer").on('click', function () {
+        $(".MainBuyer").prop('checked', false);
+
+        // Check only the one that was clicked
+        $(this).prop('checked', true);
+    });
+</script>

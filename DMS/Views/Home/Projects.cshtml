@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewData["Title"] = "Projects";
+}
+<div class="">
+    <h2 class="text-md">Projects</h2>
+    <div class="table-reponsive">
+        <table class="table table-row table-theme v-middle dataTable">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="/admin/assets/img/a0.png" class="img-fluid" height="50" width="50" />
+                    </td>
+                    <td>
+                        <h2 class="text-md">Aark Residences</h2>
+                        <a href="#" class="btn btn-primary i-con-h-a">  Project Dashboard</a>
+                        <a href="#" role="button" data-toggle="modal" data-target="#modalPlans" class="btn btn-secondary i-con-h-a"> Payment Plans</a>
+                    </td>
+                    <td>
+                        <a href="#" class="text-primary i-con-h-a"><i class="i-con i-con-edit"><i></i></i></a>
+                        <a href="#" class="text-danger i-con-h-a"><i class="i-con i-con-trash"><i></i></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="modalPlans" class="modal" data-backdrop="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Plan Details</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md mb-3">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" type="text" name="Title" placeholder="Title" />
+                    </div>
+                    <div class="col-md mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-control" data-plugin="select2" name="Type">
+                            <option value="">Type</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label">Discount</label>
+                        <input class="form-control" type="text" name="Discount" placeholder="Discount" />
+                    </div>
+                </div>
+                <h2 class="text-md">Installments <button class="btn btn-lg btn-raised btn-wave btn-icon btn-rounded mb-2 i-con-h-a blue"><span><i class="i-con i-con-plus b-2x"></i></span></button></h2>
+                <div class="plans">
+                    <div class="row">
+                        <div class="col-md mb-3">
+                            <label class="form-label">Installment Title</label>
+                            <input class="form-control" type="text" name="InstallmentTitle" placeholder="Title" />
+                        </div>
+                        <div class="col-md mb-3">
+                            <label class="form-label">Description</label>
+                            <input class="form-control" type="text" name="InstallmentDescription" placeholder="Description" />
+                        </div>
+                        <div class="col-md mb-3">
+                            <label class="form-label">Installment Percent</label>
+                            <input class="form-control" type="text" name="Percent" placeholder="Percent" />
+                        </div>
+                        <div class="col-md-1 align-self-center">
+                            <button class="btn btn-danger btn-sm i-con-h-a"><i class="i-con i-con-trash"><i></i></i></button>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>

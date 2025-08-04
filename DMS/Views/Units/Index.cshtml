@@ -1,0 +1,95 @@
+﻿@model IEnumerable<DMS.Models.Units>
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .text-center{
+        text-align:center !important;
+    }
+</style>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            @* <a asp-action="Create" class="btn btn-primary  mb-1" style="margin-bottom:20px; margin-top:10px; margin-left:25px; width:150px">Add New</a> *@
+            <div class="card-body">
+                <h4 style="color:navy;margin-bottom:30px;" class="text-md">All Units</h4>
+               @*  <a href="#" class="btn btn-primary i-con-h-a"><i class="i-con i-con-plus"><i></i></i> +Add Unit</a>
+                <button class="btn btn-outline-secondary">Plans</button> *@
+                <div class="card-datatable table-responsive text-nowrap">
+                    
+                    <div class="table-reponsive">
+                        <table id="myTable" class="table table-row table-responsive">
+                            <thead>
+                                <tr>
+                                    @* <th><input type="checkbox" name="SelectAll" /></th> *@
+                                    <th>Floor, ID</th>
+                                    <th>Status</th>
+                                    <th>Payment Plan</th>
+                                    <th>Type</th>
+                                    <th>View</th>
+                                    <th>Total Area</th>
+                                    @* <th>Price</th> *@
+                                    <th>Actions</th>
+                                    <th>Docs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                      @*   <td>
+                                            <input type="checkbox" name="" />
+                                        </td> *@
+                                        <td class="text-center">
+                                            @item.Floor_Number , <strong>@item.Unit_Number</strong>
+                                        </td>
+                                        <td class="text-center">
+                                            @item.Status
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-rounded btn-outline-secondary">60% Cons..</button>
+                                        </td>
+                                        <td class="text-center">
+                                            @item.UnitType?.Unity_Type_Name
+                                        </td>
+                                        <td class="text-center">@item.Unit_View</td>
+                                        <td>@item.Total_Size_Sqft sqft</td>
+                                        @* <td><i>AED</i> @item.Price.ToString("N")</td> *@
+                                        <td class="text-center">
+                                           
+                                            <a href="/units/unitbooking/@item.Unit_Id" class="btn btn-sm btn-primary" title="Edit">
+                                                <i class="bx bx-pencil"></i>
+                                            </a>
+                                           @*  <a href="#" class="text-dark i-con-h-a"><i class="fa fa-medkit"><i></i></i></a>
+                                            <a href="#" class="text-primary i-con-h-a"><i class="fa fa-eye"><i></i></i></a>
+                                            <a href="#" class="text-danger i-con-h-a"><i class="fa fa-cog"><i></i></i></a> *@
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="/units/unitpdf/@item.Unit_Id" class="btn btn-primary btn-sm"><i class="bx bxs-file"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#btnUnits').addClass("open");
+            $('#btnManageUnits').addClass("active");
+            $('#myTable').DataTable(); // Initialize DataTables
+
+        });
+    </script>
+ }

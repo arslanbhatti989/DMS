@@ -1,0 +1,275 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+
+@{
+    ViewData["Title"] = "Role Management";
+}
+<style>
+    #myTable {
+        background: rgba(255, 255, 255, 0.1); /* Transparent glass effect */
+        backdrop-filter: blur(10px); /* Frosted glass effect */
+        border-radius: 12px;
+        overflow: hidden; /* Prevents content from overflowing */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    }
+/* 
+        #myTable thead th {
+            background-color: #092860; 
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px;
+        } */
+
+        #myTable tbody tr {
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent rows */
+            transition: transform 0.2s ease-in-out;
+        }
+
+            #myTable tbody tr:hover {
+                transform: scale(1.02); /* Slight zoom on hover */
+                background: rgba(0, 123, 255, 0.1); /* Soft blue tint */
+            }
+
+        #myTable .btn-primary {
+            background: linear-gradient(135deg, #092860;
+            , #0056b3);
+            color: #fff;
+            border: none;
+        }
+
+        #myTable .btn-danger {
+            background: linear-gradient(135deg, #e53935, #b71c1c);
+            color: #fff;
+            border: none;
+        }
+
+        #myTable img {
+            border-radius: 12px;
+            border: 3px solid #4CAF50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .dataTables_filter input[type="search"] {
+        width: 200px; /* Adjust width as desired */
+        height: 30px; /* Adjust height as desired */
+        padding: 5px 10px;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        font-size: 14px; /* Slightly smaller text */
+        outline: none; /* Removes focus outline */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
+    }
+
+        .dataTables_filter input[type="search"]:focus {
+            border-color: #092860; /* Darker blue on focus */
+            background-color: #f0f8ff; /* Light blue background when active */
+        }
+
+    .dataTables_length label,
+    .dataTables_filter label {
+        color: #092860; /* Custom color for text */
+        font-weight: 600; /* Bold for better visibility */
+        font-size: 14px; /* Adjust size as desired */
+    }
+
+    .dataTables_length select {
+        background-color: #092860; /* Blue background */
+        color: darkblue; /* White text */
+        border: 2px solid #092860; /* Border to match */
+        border-radius: 5px; /* Rounded corners */
+        padding: 2px 5px;
+    }
+
+    .dataTables_filter input[type="search"] {
+        border: 2px solid #092860;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+    .dataTables_info {
+        color: #092860; /* Custom blue color */
+        font-weight: 600; /* Bold for better visibility */
+        font-size: 14px; /* Adjust size if needed */
+    }
+
+</style>
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            <a id="btnCreate" class="btn btn-primary  mb-1" style="border-radius:10px; margin-bottom:20px; margin-top:10px; margin-left:25px; width:100px;color:white">+ Add </a>
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+                    <div class="table-responsive">
+
+                        <table class=" mt-3 datatables-basic table table-striped table-hover border-top" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var role in Model)
+                                {
+                                    <tr>
+                                        <td>@role.Name</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" data-id="@role.Id" id="btnEdit">
+                                                <i class="bx bxs-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" onclick="Delete('@role.Id')" id="btnDelete"><i class="bx bxs-trash"></i></button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Modal to add new record -->
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+
+@* Model *@
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog labourModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="dvAddEditCrews" style="overflow:hidden;">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $('#btnRolePermission').addClass("open");
+            $('#btnManageRole').addClass("active");
+            $('#myTable').DataTable(); // Initialize DataTables
+
+
+        });
+        //Delete Data when click on save botton
+        function Delete(ID) {
+            debugger;
+            var obj = { id: ID };
+
+            // Using SweetAlert2
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',  // Use 'icon' instead of 'type'
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                padding: '2em'
+            }).then(function (result) {
+                debugger;
+                if (result.isConfirmed) {  // Check if the action was confirmed
+                    $.ajax({
+                        type: "POST",
+                        url: "/RolePermisions/DeleteRole",
+                        data: { 'id': ID },
+
+                        success: function (response) {
+                            debugger;
+                            if (response.success) {
+                                // If success, refresh or redirect to another page
+                                window.location.href = "";
+                            } else {
+                                Swal.fire("Cancelled", response.message, "error");  // Show error if not successful
+                            }
+                            // if (member == "deleted") {
+                            //     window.location.href = "";  // Refresh or redirect as needed
+                            // }
+                            // else {
+                            //     Swal.fire("Cancelled", member, "error");  // Handle error case
+                            // }
+                        }
+                    });
+                }
+            });
+        }
+        $(document).on("click", "#btnCreate", function () {
+            //$("#staticBackdropLabel").text("Upload File");
+
+            $.ajax({
+                type: "GET",
+                url: "/Rolepermisions/AddEditRole",
+                success: function (result) {
+                    debugger;
+                    $("#dvAddEditCrews").html(result);
+
+                    // Show the modal
+                    $("#staticBackdrop2").modal("show");
+                },
+                error: function () {
+                    alert("Failed to load form. Please try again.");
+                }
+            });
+        });
+        $(document).on("click", "#btnEdit", function () {
+            var id = $(this).data("id"); // Get role ID from data attribute
+            $.ajax({
+                type: "GET",
+                url: "/Rolepermisions/AddEditRole",
+                data: { id: id }, // Pass the ID to the controller
+                success: function (result) {
+                    $("#dvAddEditCrews").html(result);
+                    $("#staticBackdrop2").modal("show"); // Show modal
+                },
+                error: function () {
+                    alert("Failed to load form. Please try again.");
+                }
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Submit form via AJAX
+            $(document).on("submit", "#roleForm", function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                let form = $(this);
+                let formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Rolepermisions/AddEditRole",
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $("#staticBackdrop2").modal("hide"); // Close modal only if success
+                            location.reload(); // Refresh page or update UI as needed
+                        } else {
+                            $("#dvAddEditCrews").html(response); // Reload modal with validation errors
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred. Please try again.");
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}
+
+
+

@@ -1,0 +1,69 @@
+﻿@model DMS.Models.ViewModels.InstallmentListViewModel
+
+
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            @* <a asp-action="Create" class="btn btn-primary  mb-1" style="margin-bottom:20px; margin-top:10px; margin-left:25px; width:150px">Add New</a> *@
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+                    <div id="InstallmentsModel" class="modal" data-backdrop="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Plan Details</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="">
+                                        <h4 style="color:navy;" class="text-md mb-3">Installments of Payment Plan - @Model.Payment_Plans?.Plan_Name</h4>
+                                        <div class="table-reponsive">
+                                            <table id="myTable" class="table table-row table-theme v-middle dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Installment</th>
+                                                        <th>Milestone</th>
+                                                        <th>Percentage (%)</th>
+                                                        <th>Amount (AED)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model != null && Model.Installments != null && Model.Installments.Count() != 0)
+                                                    {
+                                                        foreach (var installs in Model.Installments)
+                                                        {
+                                                            <tr><td>@installs.Sequence_Number</td><td>@installs.Installment_Name</td><td>10%</td><td>AED @installs.Amount.ToString("N")</td></tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#btnPaymentPlans').addClass("open");
+            $('#btnManagePaymentPlans').addClass("active");
+            $('#myTable').DataTable(); // Initialize DataTables
+
+        });
+    </script>
+ }

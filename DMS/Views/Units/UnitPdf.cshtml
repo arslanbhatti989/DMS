@@ -1,0 +1,77 @@
+﻿@model DMS.Models.ViewModels.UnitViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Offer - Unit @Model.Unit_Number</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+
+    <h1>Sales Offer</h1>
+    <p><strong>Project Name:</strong> @Model.Project?.Project_Name</p>
+    <p><strong>Date:</strong> Wednesday, 14 May 2025 @DateTime.Now.ToLongDateString()</p>
+    <p>This offer is valid for 24 hours from the date of generation and subject to availability of the unit.</p>
+
+    <p>Dear Customer,</p>
+    <p>Considering the points we discussed, I believe the below listed properties will cater to your requirements.</p>
+
+    <h2>Property Details</h2>
+    <table>
+        <tr>
+            <th>Project</th>
+            <th>Unit Number</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Final Price</th>
+        </tr>
+        <tr>
+            <td>@Model.Project?.Project_Name</td>
+            <td>@Model.Unit_Number</td>
+            <td>@Model.UnitType?.Unity_Type_Name</td>
+            <td>@Model.Total_Size_Sqft.ToString("N") SQFT</td>
+            <td>AED @Model.Price.ToString("N")</td>
+        </tr>
+    </table>
+
+    <h2>Payment Plan: @Model.Unit_Number</h2>
+    <table>
+        <tr>
+            <th>Installment</th>
+            <th>Milestone</th>
+            <th>Percentage (%)</th>
+            <th>Amount (AED)</th>
+        </tr>
+        @if (Model.paymentPlans != null)
+        {
+            if(Model.paymentPlans?.InstallmentsList?.Count() > 0)
+            {
+                foreach(var installs in Model.paymentPlans.InstallmentsList)
+                {
+                    <tr><td>@installs.Sequence_Number</td><td>@installs.Installment_Name</td><td>10%</td><td>AED @installs.Amount.ToString("N")</td></tr>
+                }
+            }
+        } 
+    </table>
+
+    <h2>Fees</h2>
+    <ul>
+        <li><strong>OQOOD Fee:</strong> AED 3,000 on Registration</li>
+        <li><strong>Admin Fee:</strong> AED 5,000 on Registration</li>
+        <li><strong>Ras Al Khaimah Registration Fee:</strong> 4% on Building Completion</li>
+    </ul>
+
+    <h2>Purchase Price</h2>
+    <p><strong>AED @Model.Price.ToString("N")</strong></p>
+
+</body>
+</html>

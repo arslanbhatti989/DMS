@@ -1,0 +1,543 @@
+﻿@model DMS.Models.ViewModels.UnitViewModel
+@{
+    ViewData["Title"] = "UnitBooking";
+}
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+
+        <div class="card">
+            <div class="card-body">
+                <form action="/units/UnitBooking" method="post" enctype="multipart/form-data">
+                    <input type="hidden" value="@Model.Unit_Id" asp-for="Unit_Id" />
+                    @* <input type="hidden" value="@Model.UnitBuyers_Id" asp-for="UnitBuyers_Id" /> *@
+                    <div class="section">
+                        <h2 class="text-md mb-3">Property Information</h2>
+                        <div class="row">
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Project Name: </label> <span>@Model.Project?.Project_Name</span></div>
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Unit Number: </label> <span>Unit @Model.Unit_Number</span></div>
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Unit Type: </label> <span>@Model.UnitType?.Unity_Type_Name</span></div>
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Unit View: </label> <span>@Model.Unit_View</span></div>
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Total Area: </label> <span>@Model.Total_Size_Sqft.ToString("N") sq ft</span></div>
+                            <div class="col-md-4 form-group"><label class="font-weight-500">Total Price: </label> <span>AED @Model.Price.ToString("N")</span></div>
+                            <div class="col-md-4 form-group">
+                                <label class="font-weight-500">Payment Plan</label>
+                                <select name="paymentPlan" class="form-control" data-project-id="@Model.Project_Id" id="paymentPlan">
+                                    <option value="">Select</option>
+                                    @foreach (var item in Model.PaymentPlansList)
+                                    {
+                                        <option value="@item.Payment_Plan_Id">@item.Plan_Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4 align-self-center">
+                                <label id="installments"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section" id="buyersContainer">
+
+
+                        @if (Model?.UnitBuyers != null && Model.UnitBuyers.Count() > 0)
+                        {
+                            int ss = 0;
+                            foreach (var item in Model.UnitBuyers)
+                            {
+                                <div class="BuyerForms">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h2 class="text-md my-3">Buyer Information</h2>
+                                        <input type="hidden" name="UnitBuyers[@ss].UnitBuyer_Id" value="@item.UnitBuyer_Id" />
+                                        <button buyer-id="@item.UnitBuyer_Id" class="btn btn-danger btn-DeleteBuyerDynamic btn-sm">
+                                            <i class="i-con i-con-trash"><i></i></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input class="MainBuyer" type="radio" value="true" @(item.IsMainBuyer ? "checked" : "") name="UnitBuyers[@ss].IsMainBuyer" /> Is Main Buyer
+                                        </label>
+                                    </div>
+                                    <div class=" form-group">
+                                        <label class="form-label">Buyer Type</label>
+                                        <select class="form-control BuyerType BuyerDynamic" data-value="@item.BuyerType" name="UnitBuyers[@ss].BuyerType">
+                                            <option value="Individual">Individual</option>
+                                            <option value="Company">Company</option>
+                                        </select>
+                                    </div>
+                                    <div class="individual-fields @(item.Company != null ? "d-none":"")">
+                                        <div class="row ind_@ss">
+                                            <input type="hidden" name="UnitBuyers[@ss].Person_Id" value="@item.Person?.Id" />
+                                            <div class="form-group col-md-3"><label>First Name</label><input name="UnitBuyers[@ss].PersonFirstName" class="form-control" value="@item.Person?.FirstName"></div>
+                                            <div class="form-group col-md-3"><label>Last Name</label><input name="UnitBuyers[@ss].PersonLastName" class="form-control" value="@item.Person?.LastName"></div>
+                                            <div class="form-group col-md-3">
+                                                <label>Nationality</label>
+                                                <select name="UnitBuyers[@ss].PersonNationalityCountry_Id" data-value="@item.Person?.NationalityCountry_Id" class="form-control  countryselect">
+                                                    <option value="">Select</option>
+                                                    @if (Model.CompanyList != null && Model.CountryList?.Count() > 0)
+                                                    {
+                                                        foreach (var cc in Model.CountryList)
+                                                        {
+                                                            <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                        }
+                                                    }
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3"><label>Passport No</label><input name="UnitBuyers[@ss].PersonPassport_Number" value="@item.Person?.Passport_Number" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Passport Expiry</label><input type="date" value="@item.Person?.Passport_Expiry_Date.ToString("yyyy-MM-dd")" name="UnitBuyers[@ss].PersonPassport_Expiry_Date" class="form-control"></div>
+                                            <div class="form-group col-md-3">
+                                                <label>Nationality (from Passport)</label>
+                                                <select name="UnitBuyers[@ss].PersonPassportNationality_Id" data-value="@item.Person?.PassportNationality_Id" class="form-control countryselect">
+                                                    <option value="">Select</option>
+                                                    @if (Model.CompanyList != null && Model.CountryList?.Count() > 0)
+                                                    {
+                                                        foreach (var cc in Model.CountryList)
+                                                        {
+                                                            <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                        }
+                                                    }
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Passport Country of Issue</label>
+
+                                                <select name="UnitBuyers[@ss].PersonPassportCountry_Id" data-value="@item.Person?.PassportCountry_Id" class="form-control countryselect">
+                                                    <option value="">Select</option>
+                                                    @if (Model.CompanyList != null && Model.CountryList?.Count() > 0)
+                                                    {
+                                                        foreach (var cc in Model.CountryList)
+                                                        {
+                                                            <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                        }
+                                                    }
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3"><label>Emirates ID</label><input name="UnitBuyers[@ss].PersonEmirates_Id_Number" value="@item.Person?.Emirates_Id_Number" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Emirates ID Expiry</label><input type="date" value="@item.Person?.Emireate_Id_Expiry_Date.Value.ToString("yyyy-MM-dd")" name="UnitBuyers[@ss].PersonEmireate_Id_Expiry_Date" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>DOB</label><input type="date" name="UnitBuyers[@ss].PersonDOB" value="@(item.Person!=null&& item.Person.User!=null && item.Person.User.DOB !=null ? item.Person?.User?.DOB.Value.ToString("yyyy-MM-dd") : "")" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Address</label><input name="UnitBuyers[@ss].PersonAddress_Line_1" value="@item.Person?.Address_Line_1" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Contact</label><input name="UnitBuyers[@ss].PersonContactPerson" value="@item.Person?.ContactPerson" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Email</label><input name="UnitBuyers[@ss].PersonEmail" value="@item.Person?.User?.Email" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Marital Status</label><input name="UnitBuyers[@ss].PersonMarital" value="@item.Person?.Marital" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Occupation</label><input name="UnitBuyers[@ss].PersonOccupation" value="@item.Person?.Occupation" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Employer</label><input name="UnitBuyers[@ss].PersonEmployer" value="@item.Person?.Employer" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" value="" name="UnitBuyers[@ss].PersonFundsFile" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Ownership %</label><input type="number" value="@item.Person?.Ownership" name="UnitBuyers[@ss].PersonOwnership" min="0" max="100" class="form-control"></div>
+                                        </div>
+                                        @if (item.Person != null && item.Person.ProofOfFundsPath != null)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <a href="@item.Person.ProofOfFundsPath" target="_blank" class="text-md text-decoration-none">Uploaded Proof Of Funds File</a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="company-fields @(item.Company ==null ? "d-none":"")">
+
+                                        <div class="row comp_1">
+                                            <input type="hidden" name="UnitBuyers[@ss].Company_Id" value="@item.Company?.Company_Id" />
+                                            <div class="form-group col-md-3"><label>Company Name</label><input name="UnitBuyers[@ss].Company_Name" value="@item.Company?.Company_Name" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Trade License Number</label><input name="UnitBuyers[@ss].CompanyTrade_License_Number" value="@item.Company?.Trade_License_Number" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>License Expiry Date</label><input type="date" name="UnitBuyers[@ss].CompanyLicense_Expiry_Date" value="@item.Company?.License_Expiry_Date.ToString("yyyy-MM-dd")" class="form-control"></div>
+                                            <div class="form-group col-md-3">
+                                                <label>Country</label>
+                                                <select name="UnitBuyers[@ss].CompanyCountry_Id" data-value="@item.Company?.Country_Id" class="form-control  countryselect">
+                                                    <option value="">Select</option>
+                                                    @foreach (var cc in Model?.CountryList ?? new List<Country>())
+                                                    {
+                                                        <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3"><label>Contact Person Email</label><input name="UnitBuyers[@ss].CompanyContact_Person_Email" value="@item.Company?.Contact_Person_Email" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Contact Person Phone</label><input name="UnitBuyers[@ss].CompanyContact_Person_Phone" value="@item.Company?.Contact_Person_Phone" class="form-control"></div>
+                                            <div class="form-group col-md-3">
+                                                <label>Company City</label>
+                                                <select name="UnitBuyers[@ss].CompanyCity_Id" data-value="@item.Company?.City_Id" class="form-control countryselect">
+                                                    <option value="">Select</option>
+                                                    @foreach (var cc in Model?.CityList ?? new List<City>())
+                                                    {
+                                                        <option value="@cc.City_Id">@cc.City_Name</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-3"><label>Company Address</label><input name="UnitBuyers[@ss].CompanyAddress_Line_1" value="@item.Company?.Address_Line_1" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Company Zip Code</label><input name="UnitBuyers[@ss].CompanyZip_Code" value="@item.Company?.Zip_Code" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Designation</label><input name="UnitBuyers[@ss].CompanyContact_Person_Designation" value="@item.Company?.Contact_Person_Designation" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Signatory Contact Name</label><input name="UnitBuyers[@ss].CompanyContact_Person_Name" value="@item.Company?.Contact_Person_Name" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Signatory Emirates ID</label><input name="UnitBuyers[@ss].CompanyContact_Person_Emirates_Id" value="@item.Company?.Contact_Person_Emirates_Id" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Signatory Passport Number</label><input name="UnitBuyers[@ss].CompanyContact_Person_Passport" value="@item.Company?.Contact_Person_Passport" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" name="UnitBuyers[@ss].CompanyProofOfFundsFile" class="form-control"></div>
+                                            <div class="form-group col-md-3"><label>Ownership %</label><input type="number" name="UnitBuyers[@ss].CompanyOwnership" min="0" value="@item.Company?.Ownership" max="100" class="form-control"></div>
+
+                                        </div>
+                                        @if (item.Company != null && item.Company.ProofOfFundsPath != null)
+                                        {
+                                            <div class="row mb-3">
+                                                <div class="col-12">
+                                                    <a href="@item.Company.ProofOfFundsPath" target="_blank" class="text-md text-decoration-none">Uploaded Proof Of Funds File</a>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+                                ss++;
+                            }
+                        }
+                        else
+                        {
+                            <div class="BuyerForms">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h2 class="text-md my-3">Buyer Information</h2>
+                                    <button type="button" class="btn btn-danger btn-DeleteBuyer btn-sm">
+                                        <i class="i-con i-con-trash"><i></i></i>
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input class="MainBuyer" type="radio" value="true" name="UnitBuyers[0].IsMainBuyer" /> Is Main Buyer
+                                    </label>
+                                </div>
+                                <div class=" form-group">
+                                    <label class="form-label">Buyer Type</label>
+                                    <select class="form-control BuyerType" name="UnitBuyers[0].BuyerType">
+                                        <option value="Individual">Individual</option>
+                                        <option value="Company">Company</option>
+                                    </select>
+                                </div>
+                                <!-- Individual Fields -->
+                                <div class="individual-fields">
+                                    <div class="row ind_1">
+                                        <input type="hidden" name="UnitBuyers[0].PersonId" value="" />
+                                        <div class="form-group col-md-3"><label>First Name</label><input name="UnitBuyers[0].PersonFirstName" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Last Name</label><input name="UnitBuyers[0].PersonLastName" class="form-control"></div>
+                                        <div class="form-group col-md-3">
+                                            <label>Nationality</label>
+                                            <select name="UnitBuyers[0].PersonNationalityCountry_Id" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach (var cc in Model?.CountryList ?? new List<Country>())
+                                                {
+                                                    <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3"><label>Passport No</label><input name="UnitBuyers[0].PersonPassport_Number" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Passport Expiry</label><input type="date" name="UnitBuyers[0].PersonPassport_Expiry_Date" class="form-control"></div>
+                                        <div class="form-group col-md-3">
+                                            <label>Nationality (from Passport)</label>
+                                            <select name="UnitBuyers[0].PersonPassportNationality_Id" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach (var cc in Model?.CountryList ?? new List<Country>())
+                                                {
+                                                    <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Passport Country of Issue</label>
+                                            <select name="UnitBuyers[0].PersonPassportCountry_Id" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach (var cc in Model?.CountryList ?? new List<Country>())
+                                                {
+                                                    <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3"><label>Emirates ID</label><input name="UnitBuyers[0].PersonEmirates_Id_Number" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Emirates ID Expiry</label><input type="date" name="UnitBuyers[0].PersonEmireate_Id_Expiry_Date" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>DOB</label><input type="date" name="UnitBuyers[0].PersonDOB" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Address</label><input name="UnitBuyers[0].PersonAddress_Line_1" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Contact</label><input name="UnitBuyers[0].PersonContactPerson" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Email</label><input name="UnitBuyers[0].PersonEmail" type="email" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Marital Status</label><input name="UnitBuyers[0].PersonMarital" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Occupation</label><input name="UnitBuyers[0].PersonOccupation" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Employer</label><input name="UnitBuyers[0].PersonEmployer" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" name="UnitBuyers[0].PersonFundsFile" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Ownership %</label><input type="number" name="UnitBuyers[0].PersonOwnership" min="0" max="100" class="form-control"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Company Fields -->
+                                <div class="company-fields d-none">
+                                    <div class="row comp_1">
+                                        <div class="form-group col-md-3"><label>Company Name</label><input name="UnitBuyers[0].Company_Name" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Trade License Number</label><input name="UnitBuyers[0].CompanyTrade_License_Number" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>License Expiry Date</label><input type="date" name="UnitBuyers[0].CompanyLicense_Expiry_Date" class="form-control"></div>
+                                        <div class="form-group col-md-3">
+                                            <label>Country</label>
+                                            <select name="UnitBuyers[0].CompanyCountry_Id" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach (var cc in Model?.CountryList ?? new List<Country>())
+                                                {
+                                                    <option value="@cc.Country_Id">@cc.Country_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Company City</label>
+                                            <select name="UnitBuyers[0].CompanyCity_Id" data-value="" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach (var cc in Model?.CityList ?? new List<City>())
+                                                {
+                                                    <option value="@cc.City_Id">@cc.City_Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3"><label>Address</label><input name="UnitBuyers[0].CompanyAddress_Line_1" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Zip Code</label><input name="UnitBuyers[0].CompanyZip_Code" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Proof of Funds</label><input type="file" name="UnitBuyers[0].CompanyProofOfFundsFile" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Ownership %</label><input type="number" name="UnitBuyers[0].CompanyOwnership" min="0" max="100" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Signatory Name</label><input name="UnitBuyers[0].CompanyContact_Person_Name" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Designation</label><input name="UnitBuyers[0].CompanyContact_Person_Designation" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Signatory Emirates ID</label><input name="UnitBuyers[0].CompanyContact_Person_Emirates_Id" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Signatory Passport</label><input name="UnitBuyers[0].CompanyContact_Person_Passport" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Contact Person Email</label><input name="UnitBuyers[0].CompanyContact_Person_Email" type="email" class="form-control"></div>
+                                        <div class="form-group col-md-3"><label>Contact Person Phone</label><input name="UnitBuyers[0].CompanyContact_Person_Phone" type="number" class="form-control"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addBuyer()">Add Buyer</button>
+
+                    <div class="section">
+                        <h2 class="text-md my-3">Broker Company</h2>
+                        <select name="BrokerCompany" class="form-control">
+                            <option value="">Select</option>
+                            <option value="Direct">Direct</option>
+                            <option value="Company A">Company A</option>
+                            <option value="Company B">Company B</option>
+                        </select>
+                    </div>
+
+                    <div class="section" id="agentsContainer">
+                        <h2 class="text-md my-3">Sales Agent</h2>
+                        <div class="agents">
+                            <div class="row agent_1">
+                                <div class="col-md-4 form-group"><label>Name</label><input name="agentName" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label>Mobile Number</label><input name="agentMobile" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label>Email</label><input name="agentEmail" class="form-control"></div>
+                                <div class="col-md-4 form-group"><label>Commission %</label><input type="number" class="form-control" name="agentCommission" min="0" max="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addAgent()">Add Agent</button>
+
+                    <div class="section">
+                        <h2 class="text-md my-3">Supporting Documents</h2>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label>Passport Copy</label><input type="file" name="UserPassportPath">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>Emirates ID</label><input type="file" name="UserEmiratesIdPath">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>Proof of Funds</label><input type="file" name="UserFundsPath">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="installmentLists"></div>
+@section Scripts
+{
+    <script>
+        $("#paymentPlan").change(function(){
+            var vals = $(this).val();
+            if(vals == "")
+            {
+                $("#installments").text("");
+            }else
+            {
+                $.ajax({
+                    type:'Get',
+                    url:'/installments/GetInstallmentsCount',
+                    data:{
+                        pid:vals
+                    },
+                    success:function(r)
+                    {
+                        console.log(r);
+                        if(r.count != null || r.count > 0)
+                        {
+                            $("#installments").html("<button type='button' onclick='GetInstallmentModal()' class='btn GetInstallmentModal btn-sm btn-info'>See Installments</button>");
+                        }else
+                        {
+                            $("#installments").text("");
+                        }
+
+
+                    }
+                })
+            }
+        });
+        function GetInstallmentModal()
+        {
+            var planid = $('#paymentPlan').val();
+            if(planid!='')
+            {
+                $.ajax({
+                    type:'Get',
+                    url:'/installments/GetPartialList',
+                    data:{
+                        pid:planid
+                    },
+                    success:function(r)
+                    {
+                        $("#installmentLists").html("");
+                        $("#installmentLists").html(r);
+                        $("#InstallmentsModel").modal('show');
+                    }
+                })
+            }
+        }
+
+    </script>
+    <script>
+        function addBuyer() {
+            //const type = $(".BuyerType").val();
+            const personCount = $(".BuyerForms").length;
+            const totalCount = personCount;
+            var error = false;
+            if (totalCount > 4) {
+                Swal.fire("Limit Reached", "Total buyers cannot exceed 5.", "warning");
+                error = true;
+                return;
+
+            }
+            if(error){
+                return;
+            }else
+            {
+                GetNewFields(totalCount);
+            }
+
+        }
+        function GetNewFields(totalCount)
+        {
+            //  totalCount;
+            $.ajax({
+                type:'Get',
+                url:"/Units/_PartialBookingForms",
+                data:{
+                    no:totalCount
+                },
+                success: function(r){
+                    $("#buyersContainer").append(r);
+                }
+            })
+        }
+    </script>
+    <script>
+
+       
+        $(".btn-DeleteBuyer").click(function(){
+            //debugger;
+            $(this).closest('.BuyerForms').remove();
+        })
+        $(".btn-DeleteBuyerDynamic").on('click', function(){
+            var buyerid = $(this).attr('buyer-id');
+            $(this).closest('.BuyerForms').remove();
+            $.ajax({
+                type:'Get',
+                data:{
+                    buyerid: buyerid
+                },
+                url:"/units/deletebuyer",
+                success:function(r){
+
+                }
+            })
+        });
+
+
+         // function GetDate()
+        // {
+        //     const BuyerLists = document.querySelectorAll(".BuyerForms");
+        //     let hasEmptyRequired = false;
+        //     Array.from(BuyerLists).forEach(BuyerList => {
+        //         const requiredFields = BuyerList.querySelectorAll('input[required]');
+        //         requiredFields.forEach(input => {
+        //             if (input.value.trim() === "") {
+        //                 input.classList.add("border-danger");
+        //                 hasEmptyRequired = true;
+        //                 input.focus();
+        //                 Swal.fire('Required', 'This field is required.', 'warning');
+        //                 return;
+        //             } else {
+        //                 input.classList.remove("border-danger");
+        //             }
+        //         });
+        //     });
+        //      var error = false;
+        //     if (hasEmptyRequired) {
+        //         return; // Prevent AJAX request if there are empty required fields
+        //     }
+        //     //const
+        // }
+    </script>
+@* <script>
+            $("form").on("submit", function (e) {
+                const buyerType = $(".BuyerType").val();
+                let valid = true;
+                let missingField = "";
+
+                const personCount = $(".individual-fields .ind_1").length;
+                const companyCount = $(".company-fields .comp_1").length;
+
+                if ((personCount + companyCount) > 5) {
+                    e.preventDefault();
+                    Swal.fire("Limit Error", "Maximum of 5 buyers allowed in total (Person + Company).", "error");
+                    return false;
+                }
+
+                if (buyerType === "Individual") {
+                    $(".individual-fields .ind_1").each(function () {
+                        const name = $(this).find("input[name='PersonFirstName']").val();
+                        const passport = $(this).find("input[name='PersonPassport_Number']").val();
+                        if (!name || !passport) {
+                            valid = false;
+                            missingField = "First Name and Passport No";
+                            return false;
+                        }
+                    });
+                } else {
+                    $(".company-fields .comp_1").each(function () {
+                        const companyName = $(this).find("input[name='companyName']").val();
+                        const license = $(this).find("input[name='license']").val();
+                        if (!companyName || !license) {
+                            valid = false;
+                            missingField = "Company Name and License Number";
+                            return false;
+                        }
+                    });
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    Swal.fire("Validation Error", `Please fill required fields: ${missingField}`, "error");
+                    return false;
+                }
+            });
+        </script> *@
+
+
+}

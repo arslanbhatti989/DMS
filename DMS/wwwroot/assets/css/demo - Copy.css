@@ -1,0 +1,101 @@
+@keyframes rotateImage {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating-image {
+    width: 200px;
+    animation: rotateImage 3s linear infinite;
+}
+/*@keyframes rotateFadeZoom {
+    0% {
+        transform: scale(0.5) rotate(0deg);*/ /* Start small */
+        /*opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2) rotate(180deg);*/ /* Slightly bigger */
+        /*opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(360deg);*/ /* Back to normal */
+        /*opacity: 1;
+    }
+}
+
+.rotating-image {
+    width: 200px;
+    animation: rotateFadeZoom 3s ease-in-out infinite;
+}*/
+
+/* Container at bottom */
+.image-slider {
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px 0;
+}
+
+/* Moving images */
+.image-track {
+    display: flex;
+    gap: 20px;
+    animation: scroll-left 10s linear infinite;
+}
+
+    /* Images styling */
+    .image-track img {
+        height: 80px; /* Adjust image size */
+        width: auto;
+        display: inline-block;
+    }
+
+/* Animation to move left */
+@keyframes scroll-left {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 16px;
+}
+
+    /* Horizontal scrollbar */
+    ::-webkit-scrollbar:horizontal {
+        width: 10px;
+        height: 10px;
+    }
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #edf2f7;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #092860; /* Brown color */
+    border-radius: 100vh;
+    border: 3px solid #edf2f7;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        cursor: pointer;
+        background: #092860; /* Darker brown color for hover */
+    }

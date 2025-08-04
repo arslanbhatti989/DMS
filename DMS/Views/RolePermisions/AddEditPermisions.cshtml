@@ -1,0 +1,119 @@
+﻿@model DMS.Models.ViewModels.RolePermissionModel
+
+
+<style>
+    .form-password-toggle .input-group-text {
+        cursor: pointer;
+    }
+
+    .form-password-toggle input[type="password"]:focus + .input-group-text i.bx {
+        content: "\f3a7"; /* bx-show icon */
+    }
+
+    .form-password-toggle input[type="text"]:focus + .input-group-text i.bx {
+        content: "\f3a9"; /* bx-hide icon */
+    }
+</style>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="row">
+            @Html.Raw(TempData["AlertMessage"])
+            <div class="col-md-12">
+                @* <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Account</a></li>
+                </ul> *@
+                <div class="card mb-2">
+                    <h4 class="fw-bold py-3 mb-1" style="margin-left:20px"> Manage Role Permission</h4>
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <form asp-action="AddEditPermisions" method="post" class="p-4 border rounded shadow-sm bg-white">
+                            <h4 class="mb-3 " style="color:#092860">@(Model.Id == 0 ? "Add" : "Edit") Role Permissions</h4>
+
+                            <div class="row">
+                                <!-- Role Selection -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Role</label>
+                                    <select asp-for="RoleId" class="form-select" asp-items="ViewBag.Roles">
+                                        <option value="">-- Select Role --</option>
+                                    </select>
+                                </div>
+
+                                <!-- Sidebar Menu Selection -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Menu</label>
+                                    <select asp-for="SelectedMenuNames" class="form-select" multiple="multiple" asp-items="ViewBag.MenuNames">
+                                        <option value="">-- Select Menu --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Permissions -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" style="color:#092860">Permissions</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="All" class="form-check-input" />
+                                        <label class="form-check-label">Other</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="Add" class="form-check-input" />
+                                        <label class="form-check-label">Add</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="Edit" class="form-check-input" />
+                                        <label class="form-check-label">Edit</label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="Delete" class="form-check-input" />
+                                        <label class="form-check-label">Delete</label>
+                                    </div>
+
+                                    @*  <div class="form-check form-check-inline">
+                                        <input asp-for="Readonly" class="form-check-input" />
+                                        <label class="form-check-label">ReadOnly</label>
+                                    </div> *@
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bx bx-save"></i> Save
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="bx bx-x"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+
+                    </div>
+                    <!-- /Account -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Content -->
+
+    <div class="content-backdrop fade"></div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#SelectedMenuNames").select2({
+                placeholder: "Select Menu(s)",
+                allowClear: true
+            });
+        });
+    </script>
+}
