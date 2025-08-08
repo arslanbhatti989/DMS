@@ -44,7 +44,7 @@ namespace DMS.Services
                         Project_Id = x.Project_Id,
                         Payment_Plan_Id = x.Payment_Plan_Id,
                         Created_At = x.Created_At,
-                        Update_At = x.Update_At,
+                        Update_At = x.Updated_At,
                         Created_By = x.Created_By,
                         Plan_Name = x.Plan_Name,
                         Plan_Status = x.Plan_Status,
@@ -78,7 +78,7 @@ namespace DMS.Services
                     Project_Id = unit.Project_Id,
                     Price = unit.Price,
                     Project = unit.Project,
-                    Update_At = unit.Update_At,
+                    Update_At = unit.Updated_At,
                     Floor_Number = unit.Floor_Number,
                     Status = unit.Status,
                     Created_By = unit.Created_By,
@@ -117,7 +117,7 @@ namespace DMS.Services
                         Project_Id = x.Project_Id,
                         Payment_Plan_Id = x.Payment_Plan_Id,
                         Created_At = x.Created_At,
-                        Update_At = x.Update_At,
+                        Update_At = x.Updated_At,
                         Created_By = x.Created_By,
                         Plan_Name = x.Plan_Name,
                         Plan_Status = x.Plan_Status,
@@ -165,7 +165,7 @@ namespace DMS.Services
                     Project_Id = unit.Project_Id,
                     Price = unit.Price,
                     Project = unit.Project,
-                    Update_At = unit.Update_At,
+                    Update_At = unit.Updated_At,
                     Floor_Number = unit.Floor_Number,
                     Status = unit.Status,
                     Created_By = unit.Created_By,
@@ -226,7 +226,7 @@ namespace DMS.Services
                         person.Address_Country_Id = item.PersonAddress_Country_Id;
                         person.Address_Line_1 = item.PersonAddress_Line_1;
                         person.Updated_By = unitViewModel.UserId;
-                        person.Update_At = DateTime.Now;
+                        person.Updated_At = DateTime.Now;
                         person.Emirates_Id_Number = item.PersonEmirates_Id_Number;
                         person.Emireate_Id_Expiry_Date = item.PersonEmireate_Id_Expiry_Date;
                         person.Employer = item.PersonEmployer;

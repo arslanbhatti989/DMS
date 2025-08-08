@@ -68,6 +68,7 @@ namespace OrmaProject.Data
                     Role = "Admin",
                     PhoneNumber = "1122",
                     EmailConfirmed = true,
+                    PlainPassword = "Admin@123",
                     PasswordHash = hasher.HashPassword(null, "Admin@123"),
                     Name = "Admin",
                 };

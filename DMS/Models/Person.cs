@@ -2,7 +2,7 @@
 
 namespace DMS.Models
 {
-    public class Person
+    public class Person : BaseClass
     {
         public int Id { get; set; }
         [ForeignKey("User")]
@@ -45,9 +45,6 @@ namespace DMS.Models
         public int? Unit_Id { get; set; }
         public Units? Unit { get; set; }
         public string? Zip_Code { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Update_At { get; set; }
-        public string? Created_By { get; set; }
-        public string? Updated_By { get; set; }
+        
     }
 }

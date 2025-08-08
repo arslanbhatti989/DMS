@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DMS.Models
 {
-    public class Project
+    public class Project : BaseClass
     {
         [Key]
         public int Project_Id { get; set; }
@@ -43,13 +43,6 @@ namespace DMS.Models
 
         public DateTime? Completion_Date { get; set; }
 
-        public DateTime Created_At { get; set; }
-
-        public string? Created_By { get; set; }
-
-        public DateTime Updated_At { get; set; }
-
-        public string? Updated_By { get; set; }
 
         // Navigation properties (optional)
         public Country? Country { get; set; }

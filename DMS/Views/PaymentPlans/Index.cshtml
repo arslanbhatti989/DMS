@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    .text-align {
+        text-align: center !important;
+    }
+</style>
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
@@ -12,37 +17,40 @@
             @* <a asp-action="Create" class="btn btn-primary  mb-1" style="margin-bottom:20px; margin-top:10px; margin-left:25px; width:150px">Add New</a> *@
             <div class="card-body">
                 <div class="card-datatable table-responsive text-nowrap">
-                    <h4 style="color:navy;" class="text-md mb-3">Payment Plans</h4>
+                    <div class="d-flex justify-content-between" style=" margin-bottom: 30px; border-bottom: dashed; ">
+                        <h4 style="color:navy;" class="text-md mb-3">Payment Plans</h4>
+                        <div></div>
+                    </div>
                     <div class="table-reponsive">
-                        <table id="myTable" class="table table-row table-theme v-middle dataTable">
+                        <table id="myTable" class="table table-row table-responsive dataTable">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Title</th>
-                                    <th>Installments</th>
-                                    <th>View Installments</th>
-                                    <th>Actions</th>
+                                    <th class="text-align">Id</th>
+                                    <th class="text-align">Title</th>
+                                    <th class="text-align">Installments</th>
+                                    <th class="text-align">View Installments</th>
+                                    <th class="text-align">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td class="text-align">
                                             @item.Payment_Plan_Id
                                         </td>
-                                        <td>
+                                        <td class="text-align">
                                             @item.Plan_Name
                                         </td>
-                                        <td>@item.TotalInstallments</td>
-                                        <td>
-                                            <a href="/paymentplans/installments/@item.Payment_Plan_Id">
-                                                View
+                                        <td class="text-align">@item.TotalInstallments</td>
+                                        <td class="text-align">
+                                            <a href="/paymentplans/installments/@item.Payment_Plan_Id" class="btn btn-primary btn-sm">
+                                                <i class="bx bxs-show"></i>
                                             </a>
                                         </td>
-                                        <td>
-                                            <a href="#" class="text-primary i-con-h-a"><i class="i-con i-con-edit"><i></i></i></a>
-                                            <a href="#" class="text-danger i-con-h-a"><i class="i-con i-con-trash"><i></i></i></a>
+                                        <td class="text-align">
+                                            <a href="#" class=" btn btn-sm btn-primary"><i class="bx bxs-pencil"></i></a>
+                                            <a href="#" class="btn btn-danger btn-sm"><i class="bx bxs-trash"><i></i></i></a>
                                         </td>
                                     </tr>
                                 }
@@ -56,13 +64,20 @@
 </div>
 
 @section Scripts
- {
+{
     <script>
         $(document).ready(function () {
             $('#btnPaymentPlans').addClass("open");
             $('#btnManagePaymentPlans').addClass("active");
-            $('#myTable').DataTable(); // Initialize DataTables
-
+           $('#myTable').DataTable({
+                "pagingType": "simple_numbers", // Use simple pagination
+                "language": {
+                    "paginate": {
+                        "previous": "<<",
+                        "next": ">>"
+                    }
+                }
+            });
         });
     </script>
  }

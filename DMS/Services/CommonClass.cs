@@ -12,10 +12,11 @@ namespace DMS.Services
             _db = db;
             _iconfig = iconfig;
         }
-        public string GetPermissions()
-        {
-            return "ClockInOut,Dashboard,Company,Roles Management,Lead Management,Client Tags,Email Templates,Accounts,Unit,Manage Users,Contract,Budget,Employees,Crews,Production,Material Catalogue,Clients,Vendors,Projects,Accepted Projects,Job Costing,TimeSheet,Scheduling,Courses Management,Enrollment";
-        }
+
+                //public string GetPermissions()
+                //{
+                //    return "ClockInOut,Dashboard,Company,Roles Management,Lead Management,Client Tags,Email Templates,Accounts,Unit,Manage Users,Contract,Budget,Employees,Crews,Production,Material Catalogue,Clients,Vendors,Projects,Accepted Projects,Job Costing,TimeSheet,Scheduling,Courses Management,Enrollment";
+                //}
     }
     public static class RolePermissionsHelper
     {
@@ -36,37 +37,76 @@ namespace DMS.Services
         }
     }
 
-    //public static class SidebarMenuHelper
-    //{
-    //    public static List<string> GetSidebarMenuNames()
-    //    {
-    //        return new List<string>
-    //        {
-    //            "Dashboard",
-    //            "User",
-    //            "Projects",
-    //            "PaymentPlans",
 
-
-    //        };
-    //    }
-    //}
     public static class SidebarMenuHelper
     {
         public static List<string> GetSidebarMenuNames()
         {
             return new List<string>
             {
-                "Dashboard",
-                "Accounts",
+
+                "Users",
                 "Projects",
-                "PaymentPlns",
+                "PaymentPlans",
                 "Installments",
-                "RolePermisions"
+                "Units",
+                "Country",
+                "City",
+                "UnitTypes",
+
             };
 
 
 
+        }
+    }
+    public class SweetAlert
+    {
+        // Define constant values for title and type
+        private const string AlertTitle = "Success";
+        private const string AlertType = "info"; // default type
+
+        public static string ShowSweetAlert(string message)
+        {
+            return $@"
+            <script>
+                Swal.fire('{AlertTitle}', '{message}', '{AlertType}');
+            </script>";
+        }
+    }
+    public class SweetAlertDanger
+    {
+        private const string AlertTitle = "Error";
+        private const string AlertType = "info"; // default type
+
+
+        public static string ShowSweetAlert(string message)
+        {
+            string escapedMessage = message.Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "");
+            return $@"
+                 <script>
+                     document.addEventListener('DOMContentLoaded', function() {{
+                         Swal.fire('{AlertTitle}', '{escapedMessage}', '{AlertType}');
+                     }});
+                 </script>";
+        }
+
+    }
+    public class SweetDangerAlert
+    {
+        private const string DefaultAlertType = "info"; // Default alert type
+
+        public static string ShowSweetAlert(string title, string message)
+        {
+            string escapedTitle = title.Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "");
+            string escapedMessage = message.Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "");
+
+            return $@"
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {{
+                        Swal.fire('{escapedTitle}', '{escapedMessage}', '{DefaultAlertType}');
+                    }});
+                </script>";
         }
     }
 }

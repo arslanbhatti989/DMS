@@ -24,5 +24,7 @@ namespace DMS.Data
         public DbSet<Company> Company { get; set; }
         public DbSet<UnitBuyer> UnitBuyer { get; set; }
         public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<CompanyDocument> CompanyDocuments  { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
     }
 }

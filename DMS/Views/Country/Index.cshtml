@@ -1,0 +1,312 @@
+﻿@model List<DMS.Models.Country>
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+    .custom-swal-popup {
+        border-radius: 10px;
+    }
+
+    .custom-swal-title {
+        color: #092860 !important; /* Navy color for title */
+    }
+
+    .custom-confirm-btn {
+        background-color: #092860 !important; /* Navy color */
+        color: white !important;
+        border: none;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .custom-confirm-btn:hover {
+            background-color: #061d47 !important; /* Darker navy on hover */
+        }
+
+    .custom-cancel-btn {
+        background-color: #ccc !important;
+        color: black !important;
+        border: none;
+    }
+
+        .custom-cancel-btn:hover {
+            background-color: #bbb !important;
+        }
+</style>
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center"
+                 style="margin-top: 10px; margin-bottom: 20px; margin-left: 25px;margin-right:25px; border-bottom: dashed; height: 50px;">
+
+                <h4 style="color:darkblue">Country</h4>
+
+                @if (ViewBag.CanAdd == true || User.IsInRole("SuperAdmin"))
+                {
+                    <a id="btnCreate" class="btn btn-primary"
+                       style="border-radius: 7px;color:white">
+                        + Add
+                    </a>
+                }
+            </div>
+
+
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+
+                    <table class="datatables-basic table table-striped table-hover border-top" id="myTable">
+
+
+                        <thead>
+                            <tr>
+
+                                <th>Country Name</th>
+                                <th>Country Code</th>
+                                <th>Currency Code</th>
+                                <th>Phone Code</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @item.Country_Name
+                                    </td>
+                                    <td>@item.Country_Code</td>
+                                    <td>@item.Currency_Code</td>
+                                    <td>@item.Phone_Code</td>
+                                    <td>
+                                        @if (ViewBag.CanEdit == true || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <button class="btn btn-xs btn-primary" style="border-radius: 6px; padding: 2px 6px; font-size: 12px;" data-id="@item.Country_Id" id="btnEdit">
+                                                <i class="bx bxs-pencil"></i>
+                                            </button>
+                                        }
+                                        @if (ViewBag.CanDelete == true || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <button class="btn btn-xs btn-danger" style="border-radius: 6px; padding: 2px 6px; font-size: 12px;" onclick="Delete('@item.Country_Id')" id="btnDelete"><i class="  bx bx-trash"></i></button>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal to add new record -->
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+
+@* Model *@
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog labourModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="dvAddEditCrews" style="overflow:hidden;">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content wrapper -->
+@section Scripts
+{
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#btnCountry').addClass("open");
+            $('#btnManageCountry').addClass("active");
+
+             $('#myTable').DataTable({
+                 "pagingType": "simple_numbers", // Use simple pagination
+                 "language": {
+                     "paginate": {
+                         "previous": "<<",
+                         "next": ">>"
+                     }
+                 }
+             });
+         });
+
+          $(document).on("click", "#btnCreate", function () {
+            //$("#staticBackdropLabel").text("Upload File");
+
+            $.ajax({
+                type: "GET",
+                url: "/Country/AddEditCountry",
+                success: function (result) {
+                    debugger;
+                    $("#dvAddEditCrews").html(result);
+                        // Find the form after it's added to the DOM
+        var form = $("#countryForm");
+        if (form.length) {
+            // Remove previous validation and re-parse
+            form.removeData("validator").removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse(form);
+
+            // Show the modal
+            $("#staticBackdrop2").modal("show");
+        } else {
+            console.error("Form not found in the response");
+        }
+                },
+                error: function () {
+                    alert("Failed to load form. Please try again.");
+                }
+            });
+        });
+        $(document).on("click", "#btnEdit", function () {
+            var id = $(this).data("id"); // Get role ID from data attribute
+            debugger;
+            $.ajax({
+                type: "GET",
+                url: "/Country/AddEditCountry",
+                data: { id: id }, // Pass the ID to the controller
+                success: function (result) {
+                    $("#dvAddEditCrews").html(result);
+                   var form = $("#countryForm");
+                   if (form.length) {
+                       // Remove previous validation and re-parse
+                       form.removeData("validator").removeData("unobtrusiveValidation");
+                       $.validator.unobtrusive.parse(form);
+
+                       // Show the modal
+                       $("#staticBackdrop2").modal("show");
+                   } else {
+                       console.error("Form not found in the response");
+                   }
+                },
+                error: function () {
+                    alert("Failed to load form. Please try again.");
+                }
+            });
+        });
+        //Submit
+        $(document).on("submit", "#countryForm", function (e) {
+            e.preventDefault();
+
+            var form = $(this);
+
+            // Trigger client-side validation
+            if (!form.valid()) {
+                return false; // Stop if form is invalid
+            }
+
+            let formData = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/Country/AddEditCountry",
+                data: formData,
+                success: function (response) {
+                    try {
+                           if (typeof response === "object" && response.success === true) {
+                                 $("#staticBackdrop2").modal("hide");
+                                 location.reload();
+                            } else {
+                                  $("#dvAddEditCrews").html(response); // if you return HTML (form with errors)
+                               }
+                    } catch (e) {
+                        $("#dvAddEditCrews").html(response);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        });
+
+        //Delete Data when click on save botton
+        function Delete(ID) {
+            debugger;
+            var obj = { id: ID };
+
+            // Using SweetAlert2
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',  // Default warning icon
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                padding: '2em',
+                customClass: {
+                    popup: 'custom-swal-popup',
+                    title: 'custom-swal-title',
+                    confirmButton: 'custom-confirm-btn',
+                    cancelButton: 'custom-cancel-btn'
+                },
+                didOpen: () => {
+                    // Change the color of the icon
+                    let iconElement = document.querySelector('.swal2-icon.swal2-warning');
+                    if (iconElement) {
+                        iconElement.style.color = '#092860'; // Navy icon color
+                        iconElement.style.borderColor = '#092860';
+                    }// Navy border color
+                    //document.querySelector('.swal2-icon.swal2-warning').style.color = '#092860'; // Navy color
+                }
+            }).then(function (result) {
+                if (result.isConfirmed) {  // Check if the action was confirmed
+                    $.ajax({
+                        type: "Post",
+                        url: "/Country/Delete",
+                        data: { 'id': ID },
+
+                        success: function (response) {
+                            if (response.success) {
+                                // If success, refresh or redirect to another page
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Record has been successfully deleted.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        popup: 'custom-swal-popup',
+                                        confirmButton: 'custom-confirm-btn'
+                                    }
+                                }).then(() => {
+                                    window.location.href = ""; // Redirect after confirmation
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Cancelled",
+                                    text: response.message,
+                                    icon: "error",
+                                    confirmButtonText: "OK",
+                                    customClass: {
+                                        popup: 'custom-swal-popup',
+                                        confirmButton: 'custom-confirm-btn'
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
+    </script>
+}
+

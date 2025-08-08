@@ -1,0 +1,116 @@
+﻿@model List<DMS.Models.Project_Seller>
+@{
+    ViewData["Title"] = "Project Seller Index";
+}
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            @* <a asp-action="Create" class="btn btn-primary  mb-1" style="margin-bottom:20px; margin-top:10px; margin-left:25px; width:150px">Add New</a> *@
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+                    <div class="d-flex justify-content-between" style=" margin-bottom: 30px; border-bottom: dashed; ">
+                        <h4 class="text-md" style="color:navy;">Projects Seller</h4>
+                        @* <a asp-action="AddUpdate" asp-controller="Project" class="btn btn-sm btn-primary" style="border-radius:5px;">+ Project</a> *@
+                    </div>
+                    <div class="table-reponsive">
+                        <table id="myTable" class="table table-row table-responsive  dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Seller Name</th>
+                                    <th>License Number</th>
+                                    <th>Licence Expiry</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Project_Seller_Id
+                                        </td>
+                                        <td>
+                                            @item.Seller_Company_Name
+                                        </td>
+                                        <td>
+                                            @item.Seller_Company_License_Number
+                                        </td>
+                                        <td>
+                                            @item.Seller_Company_Licence_Expiry
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);"
+                                               class="btn btn-primary btn-sm view-project-seller-btn"
+                                               data-id="@item.Project_Seller_Id">
+                                                <i class="bx bxs-show"></i>
+                                            </a>
+
+
+                                            @* <a href="/project/ProjectSellerDetails/@item.Project_Seller_Id" class=" btn btn-primary btn-sm"><i class="bx bxs-show"></i></a> *@
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* Model *@
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog labourModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel" style="color:navy;">Project Seller Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="dvAddEditCrews" style="overflow:hidden;">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+         $(document).ready(function () {
+            $('#btnProjects').addClass("open");
+            $('#btnProjectSellerDetails').addClass("active");
+           $('#myTable').DataTable({
+                "pagingType": "simple_numbers", // Use simple pagination
+                "language": {
+                    "paginate": {
+                        "previous": "<<",
+                        "next": ">>"
+                    }
+                }
+            });
+
+        });
+        $(document).on("click", ".view-project-seller-btn", function () {
+            const id = $(this).data("id");
+
+            $.ajax({
+                url: '/project/ProjectSellerDetails/' + id,
+                type: 'GET',
+                success: function (result) {
+                    $('#dvAddEditCrews').html(result);
+                    $('#staticBackdrop2').modal('show');
+                },
+                error: function () {
+                    alert('Error loading project seller details.');
+                }
+            });
+        });
+
+    </script>
+}
+

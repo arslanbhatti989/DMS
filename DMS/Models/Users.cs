@@ -5,6 +5,7 @@ namespace DMS.Models
     public class Users : IdentityUser
     {
         public string ProfilePicture { get; set; } = string.Empty;
+        public string ParentId { get; set; } = string.Empty;
         public string PlainPassword { get; set; } = string.Empty;
         public string? Role { get; set; }
         public DateTime CreatedDate { get;set; }

@@ -15,12 +15,12 @@
     }
 
         /*  #myTable thead th {
-                background-color: #092860;
-                color: #fff;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                padding: 15px;
-            } */
+                    background-color: #092860;
+                    color: #fff;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    padding: 15px;
+                } */
 
         #myTable tbody tr {
             background: rgba(255, 255, 255, 0.5); /* Semi-transparent rows */
@@ -106,8 +106,8 @@
         height: auto !important; /* Prevents scrollbars unless necessary */
     }
 
-    .text-center{
-        text-align:center !important;
+    .text-center {
+        text-align: center !important;
     }
 </style>
 
@@ -122,8 +122,11 @@
             <div class="card-body">
                 <div class="card-datatable table-responsive text-nowrap">
                     <div class="table-responsive">
+                        <div class="d-flex justify-content-between" style=" margin-bottom: 30px; border-bottom: dashed; ">
+                            <h4 style="color:navy;" class="text-md mb-3">Permissions</h4>
+                            <a asp-action="AddEditPermisions" style="border-radius:5px" class="btn btn-primary mb-3">+ Add </a>
 
-                        <a asp-action="AddEditPermisions" style="border-radius:10px" class="btn btn-primary mb-3">+ Add </a>
+                        </div>
 
                         <table class=" table-hover border-top" id="myTable">
                             <thead>
@@ -188,7 +191,15 @@
         $(document).ready(function () {
             $('#btnRolePermission').addClass("open");
             $('#btnManageRolePermission').addClass("active");
-            $('#myTable').DataTable(); // Initialize DataTables
+            $('#myTable').DataTable({
+                "pagingType": "simple_numbers", // Use simple pagination
+                "language": {
+                    "paginate": {
+                        "previous": "<<",
+                        "next": ">>"
+                    }
+                }
+            });
 
         });
         //Delete Data when click on save botton

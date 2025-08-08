@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models
 {
-    public class UnitBuyer
+    public class UnitBuyer : BaseClass
     {
         [Key]
         public int UnitBuyer_Id { get; set; }

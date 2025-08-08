@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models
 {
-    public class Units
+    public class Units : BaseClass
     {
         [Key]
         public int Unit_Id { get; set; }
@@ -21,9 +21,6 @@ namespace DMS.Models
         public string? Unit_View { get; set; } // Sea View, Park View
         public string? Status { get; set; } // Available, Sold, Reserved
         public decimal Price {  get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Update_At { get; set; }
-        public string? Created_By { get; set; }
-        public string? Updated_By { get; set; }
+       
     }
 }

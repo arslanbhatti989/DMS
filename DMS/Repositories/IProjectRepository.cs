@@ -1,4 +1,5 @@
 ﻿using DMS.Models;
+using DMS.Models.ViewModels;
 
 namespace DMS.Repositories
 {
@@ -8,5 +9,6 @@ namespace DMS.Repositories
         public Task<Project> GetDetails(int projectId);
         public Task<Project> AddUpdate(Project model);
         public Task<bool> Delete(int projectId);
+        //public Task<ResponseClass<Project_Seller>> GetProjectSellerList();
     }
 }

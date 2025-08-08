@@ -33,7 +33,9 @@ builder.Services.AddScoped<IPaymentPlansRepository, PaymentPlansService>();
 builder.Services.AddScoped<IInstallmentsRepository, InstallmentsServices>();
 builder.Services.AddScoped<IPersonRepository, PersonService>();
 builder.Services.AddScoped<ICountryRepository, CountryService>();
+builder.Services.AddScoped<ICityRepository, CityService>();
 builder.Services.AddScoped<IRolePermissions, RolePermissionsService>();
+builder.Services.AddScoped<IUsers, UsersService>();
 
 //Email Service
 builder.Services.AddTransient<IMailSender, MailSender>();

@@ -1,0 +1,303 @@
+﻿@model DMS.Models.ViewModels.UserViewModel
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = Model.UserId == null ? "Add  User" : "Edit User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // var isEdit = Model.IsEdit;
+}
+<style>
+    .form-password-toggle .input-group-text {
+        cursor: pointer;
+    }
+
+    .form-password-toggle input[type="password"]:focus + .input-group-text i.bx {
+        content: "\f3a7"; /* bx-show icon */
+    }
+
+    .form-password-toggle input[type="text"]:focus + .input-group-text i.bx {
+        content: "\f3a9"; /* bx-hide icon */
+    }
+
+    .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9); /* Brighter overlay for clarity */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Ensure it's above all content */
+    }
+
+    .spinner {
+        border: 6px solid rgba(0, 0, 0, 0.1);
+        border-top: 6px solid #092860; /* Loader color */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px; /* Creates space between spinner and text */
+    }
+
+    .loader-text {
+        font-size: 18px;
+        color: #092860;
+        font-weight: bold;
+        animation: fadeIn 1.5s ease-in-out infinite alternate;
+    }
+
+</style>
+<!-- Content wrapper -->
+<div class="content-wrapper" >
+    <div class="loader" id="loader" style="display: none;">
+        <div class="spinner"></div>
+        <div class="loader-text">Please Wait...</div>
+    </div>
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="row">
+            @Html.Raw(TempData["AlertMessage"])
+            <div class="col-md-12">
+                @* <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Account</a></li>
+                </ul> *@
+                <div class="card mb-4">
+                    <div style="border-bottom:double;text-align:center;">
+                        <h4 class="fw-bold py-3 mb-4" style="margin-left:20px ;color:darkblue">
+                            @if (@Model.UserId == null)
+                            {
+                                <h2 style="margin-left:20px ;color:darkblue">Add User</h2>
+                            }
+                            else
+                            {
+                                <h2 style="margin-left:20px ;color:darkblue">Edit User</h2>
+                            }
+                        </h4>
+
+                    </div>
+
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <form id="formAccountSettings" method="POST" action="/Accounts/AddEditUser" enctype="multipart/form-data">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <input type="hidden" asp-for="UserId" id="hdfUserId" />
+                            <input type="hidden" asp-for="IsAdmin" id="hdfUserId" />
+                            <input type="hidden" asp-for="IsEdit" id="hdfUserId" />
+                            <input type="hidden" asp-for="IsProfile" id="hdfUserId" />
+                            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                @if (Model!=null)
+                                {
+                                    <img src="~/Images/@Model.File" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                                }
+                                <div class="button-wrapper">
+                                    <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
+                                        <!-- Ensure 'for' matches the input id -->
+                                        <span class="d-none d-sm-block">Upload photo</span>
+                                        <i class="bx bx-upload d-block d-sm-none"></i>
+                                    </label>
+                                    <input type="hidden" asp-for="File" />
+                                    <input asp-for="Picture" type="file" name="Picture" id="upload" class="account-file-input" accept="image/png, image/jpeg" style="display: none;" />
+                                    <span asp-validation-for="Picture" class="text-danger"></span>
+                                    <p class="text-muted mb-0">Allowed JPG, GIF, or PNG. Max size of 800KB</p>
+                                </div>
+
+                            </div>
+                            <hr class="my-2">
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label asp-for="Name" class="form-label" style="color:darkblue"> Name</label>
+                                    <input asp-for="Name" class="form-control" type="text" id="firstName" placeholder="First Name" autofocus />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                
+                                @if (Model.IsEdit == true)
+                                {
+                                    <div class="mb-3 col-md-6">
+                                        <label asp-for="Email" class="form-label" style="color:darkblue">E-mail</label>
+                                        <input asp-for="Email" class="form-control" type="text" id="email" placeholder="john.doe@example.com" placeholder="john.doe@example.com" readonly />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="mb-3 col-md-6">
+                                        <label asp-for="Email" class="form-label" style="color:darkblue">E-mail</label>
+                                        <input asp-for="Email" class="form-control" type="text" id="email" placeholder="john.doe@example.com" placeholder="john.doe@example.com" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                }
+
+                                <div class="mb-3 col-md-6">
+                                    <label asp-for="PhoneNumber" class="form-label" style="color:darkblue" for="phoneNumber">Phone Number</label>
+                                    <div class="input-group input-group-merge">
+                                        <input asp-for="PhoneNumber" min="0" type="number" id="phoneNumber" class="form-control"
+                                               placeholder="202 555 0111" maxlength="14" pattern="\d{10,14}"
+                                               title="Phone number must be 10 to 14 digits long" />
+                                    </div>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+
+
+                               @*  <div class="mb-3 col-md-6">
+                                    <label asp-for="Address" class="form-label" style="color:darkblue">Address</label>
+                                    <input asp-for="Address" type="text" class="form-control" id="address" placeholder="Address" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label asp-for="Country" class="form-label" style="color:darkblue">Country</label>
+                                    <input asp-for="Country" class="form-control" type="text" id="state" placeholder="Country" />
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label asp-for="City" class="form-label" style="color:darkblue">City</label>
+                                    <input asp-for="City" type="text" class="form-control" id="city" placeholder="City" />
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div> *@
+                                @if (!Model.IsAdmin)
+                                {
+                                    if (Model.IsProfile)
+                                    {
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label" for="basic-default-fullname" style="color:darkblue">Role</label>
+                                            <input asp-for="RoleName" class="form-control" readonly />
+                                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label" for="basic-default-fullname" style="color:darkblue">Role</label>
+                                            <select asp-for="RoleId" class="form-control">
+                                                <option value="">-- Please Select --</option>
+                                                @foreach (var item in ViewBag.Role)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                                        </div>
+                                    }
+
+
+
+                                }
+                                @if (Model!=null)
+                                {
+                                    @if (!Model.IsEdit)
+                                    {
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label" for="password" style="color:darkblue">Password</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="password" asp-for="Password" id="password" class="form-control" placeholder="******" />
+                                                <span class="input-group-text cursor-pointer" onclick="togglePassword('password', 'btnTogglePassword')">
+                                                    <i id="btnTogglePassword" class="bx bx-hide"></i>
+                                                </span>
+                                            </div>
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label" for="cpassword" style="color:darkblue">Confirm Password</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="password" asp-for="ConfirmPassword" id="cpassword" class="form-control" placeholder="******" />
+                                                <span class="input-group-text cursor-pointer" onclick="togglePassword('cpassword', 'btnToggleConfirmPassword')">
+                                                    <i id="btnToggleConfirmPassword" class="bx bx-hide"></i>
+                                                </span>
+                                            </div>
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+
+                                       
+                                    }
+                                }
+                                <div class="mt-2">
+                                    <button type="submit" class="btn btn-primary me-2">Save changes</button>
+                                    <button type="button" onclick="window.location.href='@Url.Action("Index", "Home")'" class="btn btn-dark ">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /Account -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- / Content -->
+
+    <div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
+@section Scripts
+{
+    @* <script src="~/assets/css/loadingoverlay.min.js"></script> *@
+    <script>
+        $(document).ready(function () {
+            $('#formAccountSettings').on('submit', function (e) {
+                if ($(this).valid()) {  // Ensures form validation is successful
+                    $('#loader').fadeIn();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+             
+
+            // Show loader as soon as the page starts loading
+            showLoader('list');
+
+
+
+            // Hide loader only after the page has fully loaded
+            window.onload = function () {
+                HideLoader('list');
+            };
+        });
+
+        // Function to show the loader
+        function showLoader(id) {
+            $('#' + id).LoadingOverlay("show", {
+                size: 10, // Size of the spinner
+                image: "", // Optional: URL of a custom image
+                fontawesome: "fa fa-spinner fa-spin", // Optional: Use FontAwesome for the spinner
+                background: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
+            });
+        }
+
+        // Function to hide the loader
+        function HideLoader(id) {
+            debugger;
+            $('#' + id).LoadingOverlay("hide", true);
+
+        }
+
+    </script>
+    <script>
+        $('#User').addClass("open");
+        $('#btnUser').addClass("active");
+        // var userTable = $('#myTable').DataTable();
+        function togglePassword(inputId, iconId) {
+            let passwordInput = document.getElementById(inputId);
+            let icon = document.getElementById(iconId);
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text"; // Show password
+                icon.classList.replace("bx-hide", "bx-show");
+            } else {
+                passwordInput.type = "password"; // Hide password
+                icon.classList.replace("bx-show", "bx-hide");
+            }
+        }
+
+    </script>
+
+}
+

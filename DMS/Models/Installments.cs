@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models
 {
-    public class Installments
+    public class Installments :BaseClass
     {
         [Key]
         public int Installment_Id { get; set; }
@@ -14,9 +14,6 @@ namespace DMS.Models
         public DateTime DueDate {  get; set; }
         public decimal Amount { get; set; }
         public int Sequence_Number {  get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Update_At { get; set; }
-        public string? Created_By { get; set; }
-        public string? Updated_By { get; set; }
+       
     }
 }

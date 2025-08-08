@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models
 {
-    public class ProjectSellerAdminFee
+    public class ProjectSellerAdminFee : BaseClass
     {
         [Key]
         public int Project_Seller_Admin_Fee_Id { get; set; }
@@ -17,9 +17,6 @@ namespace DMS.Models
         public decimal Other_Charges { get; set; }
         public string? Rera_Fee { get; set; }
         public string? Rera_Fee_Description { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Update_At { get; set; }
-        public string? Created_By { get; set; }
-        public string? Updated_By { get; set; }
+       
     }
 }

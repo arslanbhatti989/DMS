@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DMS.Models
 {
-    public class BaseClass
+    public class ParentClass
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,7 +18,7 @@ namespace DMS.Models
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
     }
-    public class RolePermissions : BaseClass
+    public class RolePermissions : ParentClass
     {
 
         public string ModelloName { get; set; }

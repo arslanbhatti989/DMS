@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models
 {
-    public class UnitType
+    public class UnitType : BaseClass
     {
         [Key]
         public int Unity_Type_Id { get; set; }
@@ -13,9 +13,6 @@ namespace DMS.Models
         public Project? Project { get; set; }
         [ForeignKey("Project")]
         public int Project_Id { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Update_At { get; set; }
-        public string? Created_By { get; set; }
-        public string? Updated_By { get; set; }
+       
     }
 }

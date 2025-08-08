@@ -7,12 +7,7 @@
 @inject Microsoft.AspNetCore.Identity.SignInManager<Users> SignInManager
 @inject DMS.Data.ApplicationDbContext _db
 
-@* 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> signInManager;
-@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
-@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> SignInManager
-@inject Guardian_Health_Care.Data.ApplicationDBContext _db *@
+
 <!DOCTYPE html>
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
@@ -115,9 +110,12 @@
 <body style="background-color:  #f0f5f5">
 
     @{
+
+
         var user = await UserManager.GetUserAsync(User);
         // var fullName = $"{user?.FirstName} {user?.LastName}";
         var fullName = user?.Name;
+
     }
 
     <!-- Layout wrapper -->
@@ -149,13 +147,6 @@
                             <i class="menu-icon tf-icons bx bxs-home"></i>
                             <div data-i18n="Dashboards">Dashboard</div>
                         </a>
-                        @*  <ul class="menu-sub">
-                            <li class="menu-item" id="btnIndex">
-                                <a  class="menu-link">
-                                    <div data-i18n="Analytics">Dashboard</div>
-                                </a>
-                            </li>
-                        </ul> *@
 
                     </li>
                     @if (SignInManager.IsSignedIn(User))
@@ -166,9 +157,8 @@
                         var rolePermissions = _db.RolePermissions.Where(rp => rp.Role.Name == userRole).ToList();
 
                         // Check permission for User Management
-                        // var userPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName == "User");
-                        @*  var userPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("User"));
-                        if (userPermission != null || User.IsInRole("SuperAdmin"))
+                        var userPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("Users"));
+                        if (userPermission != null || User.IsInRole("SuperAdmin") || User.IsInRole("Super Admin"))
                         {
                             <li class="menu-item " id="User">
                                 <a href="@Url.Action("Index","Accounts")" class="menu-link ">
@@ -177,34 +167,11 @@
                                 </a>
 
                             </li>
-                        } *@
-
-                        var paymentPlanPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("PaymentPlans"));
-                        if (paymentPlanPermission != null || User.IsInRole("SuperAdmin"))
-                        {
-
-                            <li class="menu-item " id="btnPaymentPlans">
-                                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                    <i class="menu-icon tf-icons bx bxs-plug"></i>
-                                    <div data-i18n="Dashboards">Payment Plans</div>
-                                </a>
-                                <ul class="menu-sub">
-
-                                    <li class="menu-item " id="btnManagePaymentPlans">
-                                        <a href="@Url.Action("Index","PaymentPlans")" class="menu-link ">
-                                            <i class="menu-icon tf-icons bx bxs-user"></i>
-                                            <div data-i18n="Dashboards">Payment Plans</div>
-                                        </a>
-
-                                    </li>
-
-                                </ul>
-
-                            </li>
                         }
+
                         // Check permission for Zip Codes Module
                         var projectPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("Projects"));
-                        if (projectPermission != null || User.IsInRole("SuperAdmin"))
+                        if (projectPermission != null || User.IsInRole("SuperAdmin") || User.IsInRole("Super Admin"))
                         {
 
                             <li class="menu-item " id="btnProjects">
@@ -221,6 +188,36 @@
                                         </a>
 
                                     </li>
+                                    <li class="menu-item " id="btnProjectSellerDetails">
+                                        <a href="@Url.Action("ProjectSellerIndex","Project")" class="menu-link">
+                                            <i class="menu-icon tf-icons "></i>
+                                            <div data-i18n="Dashboards">Project Seller</div>
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        }
+                        var paymentPlanPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("PaymentPlans"));
+                        if (paymentPlanPermission != null || User.IsInRole("SuperAdmin") || User.IsInRole("Super Admin"))
+                        {
+
+                            <li class="menu-item " id="btnPaymentPlans">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <i class="menu-icon tf-icons bx bxs-diamond"></i>
+                                    <div data-i18n="Dashboards">Payment Plans</div>
+                                </a>
+                                <ul class="menu-sub">
+
+                                    <li class="menu-item " id="btnManagePaymentPlans">
+                                        <a href="@Url.Action("Index","PaymentPlans")" class="menu-link ">
+                                            <i class="menu-icon tf-icons "></i>
+                                            <div data-i18n="Dashboards">Payment Plans</div>
+                                        </a>
+
+                                    </li>
 
                                 </ul>
 
@@ -229,12 +226,12 @@
 
                         // Check permission for Language Module
                         var permission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("RolePermisions"));
-                        if (User.IsInRole("SuperAdmin"))
+                        if (User.IsInRole("SuperAdmin") || User.IsInRole("Super Admin"))
                         {
 
                             <li class="menu-item " id="btnRolePermission">
                                 <a href="javascript:void(0);" class="menu-link menu-toggle">
-                                    <i class="menu-icon tf-icons bx bxs-paint-roll"></i>
+                                    <i class="menu-icon tf-icons bx bx-stop-circle"></i>
                                     <div data-i18n="Dashboards">Role Permissions</div>
                                 </a>
                                 <ul class="menu-sub">
@@ -275,13 +272,63 @@
                                         </a>
 
                                     </li>
-                                    <li class="menu-item " id="btnManageType">
-                                        <a href="@Url.Action("Index","Units")" class="menu-link ">
+                                    <li class="menu-item " id="btnManageUnitType">
+                                        <a href="@Url.Action("Index","UnitTypes")" class="menu-link ">
                                             <i class="menu-icon tf-icons "></i>
                                             <div data-i18n="Dashboards">Units Type</div>
                                         </a>
 
                                     </li>
+                                </ul>
+
+                            </li>
+
+                        }
+                       
+                        // Check permission for Insurance Module
+                        var countryPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("Country"));
+                        if (countryPermission != null || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class="menu-item " id="btnCountry">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <i class="menu-icon tf-icons bx bxs-polygon"></i>
+                                    <div data-i18n="Dashboards">Country</div>
+                                </a>
+                                <ul class="menu-sub">
+
+                                    <li class="menu-item " id="btnManageCountry">
+                                        <a href="@Url.Action("Index","Country")" class="menu-link ">
+                                            <i class="menu-icon tf-icons "></i>
+                                            <div data-i18n="Dashboards">Manage Country</div>
+                                        </a>
+
+                                    </li>
+                                   
+                                </ul>
+
+                            </li>
+
+                        }
+
+                        // Check permission for Insurance Module
+                        var cityPermission = rolePermissions.FirstOrDefault(rp => rp.ModelloName.Split(',').Contains("City"));
+                        if (cityPermission != null || User.IsInRole("SuperAdmin"))
+                        {
+                            <li class="menu-item " id="btnCity">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                    <i class="menu-icon tf-icons bx bxs-flag"></i>
+                                    <div data-i18n="Dashboards">City</div>
+                                </a>
+                                <ul class="menu-sub">
+
+                                    <li class="menu-item " id="btnManageCity">
+                                        <a href="@Url.Action("Index","City")" class="menu-link ">
+                                            <i class="menu-icon tf-icons "></i>
+                                            <div data-i18n="Dashboards">Manage City</div>
+                                        </a>
+
+                                    </li>
+
                                 </ul>
 
                             </li>
@@ -362,8 +409,7 @@
                             </li>
                         }
 
-                    }
- *@
+                    }*@
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -451,9 +497,12 @@
                                                     <span class="fw-semibold d-block">@fullName</span>
 
                                                     <small class="text-muted">
-                                                        @foreach (var role in await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)))
+                                                        @if (User.Identity.IsAuthenticated)
                                                         {
-                                                            @role
+                                                            @foreach (var role in await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User)))
+                                                            {
+                                                                @role
+                                                            }
                                                         }
                                                     </small>
                                                 </div>
@@ -465,10 +514,13 @@
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item">
+                                        @if ( User.IsInRole("SuperAdmin") || User.IsInRole("Super Admin"))
+                                        {
+                                        <a href="@Url.Action("AddEditUser","Accounts",new {id = user.Id})" class="dropdown-item">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>
+                                        }
                                     </li>
 
                                     <li>
@@ -571,7 +623,7 @@
     <script src="~/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
     <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
     <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
-
+   
     <!-- Vendors JS -->
     <script src="~/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 

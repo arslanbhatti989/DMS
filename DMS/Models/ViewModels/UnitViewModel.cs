@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DMS.Models.ViewModels
 {
@@ -126,10 +127,59 @@ namespace DMS.Models.ViewModels
     }
     public class UserViewModel
     {
+       
+
+        [Required(ErrorMessage = "The Phone Number is Required")]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        public string RoleId { get; set; }
+        public string RoleName { get; set; }
+        public string ParentId { get; set; }
+        [NotMapped]
+        public bool IsEdit { get; set; } = false;
+        [NotMapped]
+        public bool IsAdmin { get; set; } = false;
+        public bool IsProfile { get; set; } = false;
+        [NotMapped]
+        public IFormFile Picture { get; set; }
+        [NotMapped]
+        public string File { get; set; }
+
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        [Required]
+        [StringLength(100, MinimumLength = 8)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$",
+        ErrorMessage = "Password must be at least 8 characters long, at least one uppercase letter, one number, and one special character.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
         public string? UserId { get; set; } 
         public string? Name { get; set; }
         public string? Role {  get; set; }
-        public string? Email {  get; set; }
+       
         public DateTime? DOB {  get; set; }
         public string? PassportPath { get; set; }
         public string? FundsPath { get; set; }

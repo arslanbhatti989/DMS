@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+
+            <div class="card-body">
+
+                <h1 class="text-danger">Access Denied</h1>
+                <p>You do not have permission to view this page.</p>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>

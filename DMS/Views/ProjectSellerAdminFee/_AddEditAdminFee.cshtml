@@ -1,0 +1,116 @@
+﻿@model DMS.Models.ViewModels.ProjectSellerAdminFeeViewModel
+@{
+    ViewData["Title"] = Model.Project_Seller_Admin_Fee_Id == 0 ? "Add Admin Fee" : "Edit Admin Fee";
+    <div >
+        <h4 style="color: navy;"> @ViewData["Title"]</h4>
+    </div>
+
+}
+<form id="unitTypeForm" method="post">
+    <input type="hidden" asp-for="Project_Seller_Admin_Fee_Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="OQoob_Fee_Value">OQoob Fee</label>
+                <input asp-for="OQoob_Fee_Value"
+                       type="number" min="0"
+                       min="0"
+                       step="0.01"
+                       asp-for="Admin_Fee_Value"
+                       class="form-control"
+                       oninput="this.value = Math.abs(this.value)" />
+                <span asp-validation-for="OQoob_Fee_Value" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="OQood_Fee_Description">OQood Fee Description</label>
+                <textarea asp-for="OQood_Fee_Description" class="form-control"></textarea>
+                <span asp-validation-for="OQood_Fee_Description" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="Rera_Fee">Rera Fee</label>
+                <input asp-for="Rera_Fee" class="form-control"
+                       type="number" min="0"
+                       min="0"
+                       step="0.01"
+                       asp-for="Admin_Fee_Value"
+                       class="form-control"
+                       oninput="this.value = Math.abs(this.value)" />
+                <span asp-validation-for="Rera_Fee" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="Rera_Fee_Description">Rera Fee Description</label>
+                <textarea asp-for="Rera_Fee_Description" class="form-control"></textarea>
+                <span asp-validation-for="Rera_Fee_Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="Admin_Fee_Value">Admin Fee</label>
+                <input type="number"
+                       min="0"
+                       step="0.01"
+                       asp-for="Admin_Fee_Value"
+                       class="form-control"
+                       oninput="this.value = Math.abs(this.value)" />
+                <span asp-validation-for="Admin_Fee_Value" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="Admin_Fee_Description">Admin Fee Description</label>
+                <textarea asp-for="Admin_Fee_Description" class="form-control"></textarea>
+                <span asp-validation-for="Admin_Fee_Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label asp-for="Other_Charges">Other Charges</label>
+                <input type="number"
+                       min="0"
+                       step="0.01"
+                       asp-for="Other_Charges"
+                       class="form-control"
+                       oninput="this.value = Math.abs(this.value)" />
+                <span asp-validation-for="Other_Charges" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-md-6 mt-4">
+
+            <div class="form-group">
+                <label asp-for="Project_Id">Project</label>
+                <select asp-for="Project_Id" asp-items="ViewBag.Project" class="form-control">
+                    <option value="">Please Select</option> <!-- Optional default option -->
+                </select>
+                <span asp-validation-for="Project_Id" class="text-danger"></span>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12 mt-4">
+            <div class="mt-4">
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

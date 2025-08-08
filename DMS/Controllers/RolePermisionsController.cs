@@ -3,6 +3,7 @@ using DMS.Models;
 using DMS.Models.ViewModels;
 using DMS.Repositories;
 using DMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,8 @@ using System.Security.Claims;
 
 namespace DMS.Controllers
 {
+    [Authorize]
+
     public class RolePermisionsController : Controller
     {
         //private readonly IRolePermissions _rolePermission;
@@ -196,9 +199,9 @@ namespace DMS.Controllers
                 {
                     role =await _roleManager.Roles.FirstOrDefaultAsync(r => r.Id == id);
                     if (role == null) return NotFound();
-                    return PartialView("_AddEditRole", role);
+                    return PartialView("_AddEdit", role);
                 }
-                return PartialView("_AddEditRole", new IdentityRole());
+                return PartialView("_AddEdit", new IdentityRole());
             }
             catch (Exception ex)
             {
@@ -214,11 +217,11 @@ namespace DMS.Controllers
         {
             try
             {
-                if (model.Name?.Trim().ToLower() == "super admin")
+                if (model.Name?.Trim().ToLower() == "superadmin" || model.Name?.Trim().ToLower() == "super admin" || model.Name?.Trim().ToLower() == "super admins" || model.Name?.Trim().ToLower() == "superadmins")
                 {
-                    ModelState.AddModelError("Name", "The role name 'Admin' is not allowed. Please choose a different name.");
+                    ModelState.AddModelError("Name", "The role name 'Super Admin' is not allowed. Please choose a different name.");
                     IdentityRole role = new IdentityRole();
-                    return PartialView("_AddEditRole", new IdentityRole()); // Return the same partial view with errors
+                    return PartialView("_AddEdit", model);
 
                     // ModelState.AddModelError("RoleName", "The role name 'Admin' is not allowed. Please choose a different name.");
                 }
@@ -227,7 +230,6 @@ namespace DMS.Controllers
                     var existingRole = await _roleManager.FindByIdAsync(model.Id);
                     if (existingRole == null)
                     {
-
                         await _roleManager.CreateAsync(new IdentityRole(model.Name));
 
                     }

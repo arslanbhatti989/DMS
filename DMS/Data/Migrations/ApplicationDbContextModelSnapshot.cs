@@ -42,10 +42,13 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Status_Active")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -143,6 +146,92 @@ namespace DMS.Data.Migrations
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("DMS.Models.CompanyDocument", b =>
+                {
+                    b.Property<string>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApprovedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Created_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("DocumentExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DocumentIssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DocumentTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FilePath1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReviewedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Updated_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DocumentId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("CompanyDocuments");
+                });
+
             modelBuilder.Entity("DMS.Models.Country", b =>
                 {
                     b.Property<int>("Country_Id")
@@ -166,13 +255,16 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Currency_Code")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Phone_Code")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status_Active")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -181,6 +273,36 @@ namespace DMS.Data.Migrations
                     b.HasKey("Country_Id");
 
                     b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("DMS.Models.DocumentType", b =>
+                {
+                    b.Property<string>("DocumentTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Created_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Updated_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DocumentTypeId");
+
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("DMS.Models.Installments", b =>
@@ -206,13 +328,16 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Installment_Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("Payment_Plan_Id")
                         .HasColumnType("int");
 
                     b.Property<int>("Sequence_Number")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -239,6 +364,9 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Plan_Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -248,7 +376,7 @@ namespace DMS.Data.Migrations
                     b.Property<int?>("Project_Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -305,6 +433,9 @@ namespace DMS.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -347,7 +478,7 @@ namespace DMS.Data.Migrations
                     b.Property<int?>("Unit_Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -406,6 +537,9 @@ namespace DMS.Data.Migrations
 
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Plot_Number")
                         .HasColumnType("nvarchar(max)");
@@ -471,6 +605,9 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("OQoob_Fee_Value")
                         .HasColumnType("decimal(18,2)");
 
@@ -489,7 +626,7 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Rera_Fee_Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -522,6 +659,9 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Seller_Company_Address")
                         .HasColumnType("nvarchar(max)");
 
@@ -534,7 +674,7 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Seller_Company_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -621,6 +761,15 @@ namespace DMS.Data.Migrations
                     b.Property<int?>("Company_Id")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Created_By")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsMainBuyer")
                         .HasColumnType("bit");
 
@@ -629,6 +778,12 @@ namespace DMS.Data.Migrations
 
                     b.Property<int>("Unit_Id")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Updated_By")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitBuyer_Id");
 
@@ -655,6 +810,9 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Created_By")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Project_Id")
                         .HasColumnType("int");
 
@@ -664,7 +822,7 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Unity_Type_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -700,6 +858,9 @@ namespace DMS.Data.Migrations
                     b.Property<decimal>("Interal_Unit_Size_Sqft")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -721,7 +882,7 @@ namespace DMS.Data.Migrations
                     b.Property<string>("Unit_View")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Update_At")
+                    b.Property<DateTime>("Updated_At")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updated_By")
@@ -786,6 +947,10 @@ namespace DMS.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ParentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PassportPath")
                         .HasColumnType("nvarchar(max)");
@@ -998,6 +1163,33 @@ namespace DMS.Data.Migrations
                     b.Navigation("Country");
 
                     b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("DMS.Models.CompanyDocument", b =>
+                {
+                    b.HasOne("DMS.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DMS.Models.DocumentType", "DocumentType")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DMS.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("DocumentType");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("DMS.Models.Installments", b =>

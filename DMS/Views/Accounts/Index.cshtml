@@ -1,5 +1,375 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<DMS.Models.Users>
 @{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+<style>
+   
+    .custom-swal-popup {
+        border-radius: 10px;
+    }
+
+    .custom-swal-title {
+        color: #092860 !important; /* Navy color for title */
+    }
+
+    .custom-confirm-btn {
+        background-color: #092860 !important; /* Navy color */
+        color: white !important;
+        border: none;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .custom-confirm-btn:hover {
+            background-color: #061d47 !important; /* Darker navy on hover */
+        }
+
+    .custom-cancel-btn {
+        background-color: #ccc !important;
+        color: black !important;
+        border: none;
+    }
+
+        .custom-cancel-btn:hover {
+            background-color: #bbb !important;
+        }
+</style>
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @Html.Raw(TempData["AlertMessage"])
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center"
+                 style="margin-top: 10px; margin-bottom: 20px; margin-left: 25px;margin-right:25px; border-bottom: dashed; height: 50px;">
+
+                <h4 style="color:darkblue">Accounts</h4>
+
+                @if (ViewBag.CanAdd == true || User.IsInRole("SuperAdmin"))
+                {
+                    <a asp-action="AddEditUser" class="btn btn-primary"
+                       style="border-radius: 7px;">
+                        + Add
+                    </a>
+                }
+            </div>
+
+
+            <div class="card-body">
+                <div class="card-datatable table-responsive text-nowrap">
+
+                    <table class="datatables-basic table table-striped table-hover border-top" id="myTable">
+
+
+                        <thead>
+                            <tr>
+                                @* <th>
+                                    <input type="checkbox" id="selectAll" /> <!-- Checkbox to select all rows -->
+                                </th> *@
+                                <th>Picture</th>
+                                <th>First Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                @* <th>Address</th> *@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @*  <td>
+                                        <input type="checkbox" style="color:navy;" class="rowCheckbox" value="@item.Id" /> <!-- Checkbox for each row -->
+                                    </td> *@
+                                    <td>
+                                        <img src="~/Images/@item.ProfilePicture" height="50px" width="50px" style="border-radius:50px" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.PhoneNumber</td>
+                                    @* <td>@item.Address</td> *@
+                                    <td>
+                                        @if (ViewBag.CanEdit == true ||  User.IsInRole("SuperAdmin"))
+                                        {
+                                            <button class="btn btn-xs btn-primary" style="border-radius: 6px; padding: 2px 6px; font-size: 12px;" onclick="window.location.href='@Url.Action("AddEditUser", "Accounts", new { id = item.Id })'" id="btnEdit">
+                                                <i class="bx bxs-pencil"></i>
+                                            </button>
+                                        }
+                                        @if (ViewBag.CanDelete == true || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <button class="btn btn-xs btn-danger" style="border-radius: 6px; padding: 2px 6px; font-size: 12px;" onclick="Delete('@item.Id')" id="btnDelete"><i class="  bx bx-trash"></i></button>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal to add new record -->
+    </div>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
+@section Scripts
+{
+    @* <script src="~/assets/css/loadingoverlay.min.js"></script> *@
+    <!-- LoadingOverlay Library -->
+    <script>
+         $(document).ready(function() {
+            $('#myTable').DataTable({
+                "pagingType": "simple_numbers", // Use simple pagination
+                "language": {
+                    "paginate": {
+                        "previous": "<<",
+                        "next": ">>"
+                    }
+                }
+            });
+        });
+        $(document).ready(function () {
+
+
+            // Show loader as soon as the page starts loading
+            showLoader('list');
+
+
+
+            // Hide loader only after the page has fully loaded
+            window.onload = function () {
+                HideLoader('list');
+            };
+        });
+
+        // Function to show the loader
+        function showLoader(id) {
+            $('#' + id).LoadingOverlay("show", {
+                size: 10, // Size of the spinner
+                image: "", // Optional: URL of a custom image
+                fontawesome: "fa fa-spinner fa-spin", // Optional: Use FontAwesome for the spinner
+                background: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
+            });
+        }
+
+        // Function to hide the loader
+        function HideLoader(id) {
+            debugger;
+            $('#' + id).LoadingOverlay("hide", true);
+
+        }
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            // Select/Deselect all checkboxes
+            $('#selectAll').click(function () {
+                $('.rowCheckbox').prop('checked', this.checked);
+                toggleBulkDeleteButton();
+            });
+
+            // Toggle "Delete Selected" button based on checkbox selection
+            $('.rowCheckbox').change(function () {
+                if ($('.rowCheckbox:checked').length > 0) {
+                    $('#btnBulkDelete').prop('disabled', false);
+                } else {
+                    $('#btnBulkDelete').prop('disabled', true);
+                }
+
+                // Uncheck "Select All" if any checkbox is unchecked
+                if (!this.checked) {
+                    $('#selectAll').prop('checked', false);
+                }
+            });
+
+            // Bulk Delete Action
+            $('#btnBulkDelete').click(function () {
+                var selectedIds = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedIds.push($(this).val());
+                });
+
+                if (selectedIds.length > 0) {
+                    // SweetAlert2 Confirmation Popup
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning', // Default warning icon
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel',
+                        padding: '2em',
+                        customClass: {
+                            popup: 'custom-swal-popup',
+                            title: 'custom-swal-title',
+                            confirmButton: 'custom-confirm-btn',
+                            cancelButton: 'custom-cancel-btn'
+                        },
+                        didOpen: () => {
+                            // Change the color of the icon
+                            // Change the color and border of the warning icon
+                            let iconElement = document.querySelector('.swal2-icon.swal2-warning');
+                            if (iconElement) {
+                                iconElement.style.color = '#092860'; // Navy icon color
+                                iconElement.style.borderColor = '#092860';
+                            }// Navy border color
+                            //document.querySelector('.swal2-icon.swal2-warning').style.color = '#092860'; // Navy color
+                        }
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '@Url.Action("BulkDelete", "Account")',
+                                type: 'POST',
+                                data: { ids: selectedIds },
+                                success: function (response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Deleted!',
+                                            text: 'Selected records have been deleted.',
+                                            icon: 'success',
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                popup: 'custom-swal-popup',
+                                                confirmButton: 'custom-confirm-btn'
+                                            }
+                                        }).then(function () {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error!',
+                                            text: response.message || 'Error deleting records.',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                popup: 'custom-swal-popup',
+                                                confirmButton: 'custom-confirm-btn'
+                                            }
+                                        });
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'An error occurred while deleting records.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            popup: 'custom-swal-popup',
+                                            confirmButton: 'custom-confirm-btn'
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                } else {
+                    // Show warning if no records are selected
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: 'Please select at least one record to delete.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+        // Function to toggle the bulk delete button
+        function toggleBulkDeleteButton() {
+            if ($('.rowCheckbox:checked').length > 0) {
+                $('#btnBulkDelete').prop('disabled', false);
+            } else {
+                $('#btnBulkDelete').prop('disabled', true);
+            }
+        }
+        $(document).ready(function () {
+            $('#User').addClass("open");
+            $('#btnUser').addClass("active");
+
+
+
+        });
+        //Delete Data when click on save botton
+        function Delete(ID) {
+            debugger;
+            var obj = { id: ID };
+
+            // Using SweetAlert2
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',  // Default warning icon
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                padding: '2em',
+                customClass: {
+                    popup: 'custom-swal-popup',
+                    title: 'custom-swal-title',
+                    confirmButton: 'custom-confirm-btn',
+                    cancelButton: 'custom-cancel-btn'
+                },
+                didOpen: () => {
+                    // Change the color of the icon
+                    let iconElement = document.querySelector('.swal2-icon.swal2-warning');
+                    if (iconElement) {
+                        iconElement.style.color = '#092860'; // Navy icon color
+                        iconElement.style.borderColor = '#092860';
+                    }// Navy border color
+                    //document.querySelector('.swal2-icon.swal2-warning').style.color = '#092860'; // Navy color
+                }
+            }).then(function (result) {
+                if (result.isConfirmed) {  // Check if the action was confirmed
+                    $.ajax({
+                        type: "POST",
+                        url: "/Accounts/Delete",
+                        data: { 'id': ID },
+
+                        success: function (response) {
+                            if (response.success) {
+                                // If success, refresh or redirect to another page
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Record has been successfully deleted.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        popup: 'custom-swal-popup',
+                                        confirmButton: 'custom-confirm-btn'
+                                    }
+                                }).then(() => {
+                                    window.location.href = ""; // Redirect after confirmation
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Cancelled",
+                                    text: response.message,
+                                    icon: "error",
+                                    confirmButtonText: "OK",
+                                    customClass: {
+                                        popup: 'custom-swal-popup',
+                                        confirmButton: 'custom-confirm-btn'
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
+    </script>
+}
+

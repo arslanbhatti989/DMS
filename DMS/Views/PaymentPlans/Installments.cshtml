@@ -45,7 +45,15 @@
         $(document).ready(function () {
             $('#btnPaymentPlans').addClass("open");
             $('#btnManagePaymentPlans').addClass("active");
-            $('#myTable').DataTable(); // Initialize DataTables
+            $('#myTable').DataTable({
+                "pagingType": "simple_numbers", // Use simple pagination
+                "language": {
+                    "paginate": {
+                        "previous": "<<",
+                        "next": ">>"
+                    }
+                }
+            });
 
         });
     </script>

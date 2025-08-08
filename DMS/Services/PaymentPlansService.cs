@@ -24,7 +24,7 @@ namespace DMS.Services
                 Plan_Status= x.Plan_Status,
                 Plan_Name= x.Plan_Name,
                 Project = x.Project,
-                Update_At= x.Update_At,
+                Update_At= x.Updated_At,
                 TotalInstallments = db.Installments.Where(a=>a.Payment_Plan_Id == x.Payment_Plan_Id).Count(),
                 Updated_By= x.Updated_By,
                 
@@ -46,7 +46,7 @@ namespace DMS.Services
                 Plan_Status = x.Plan_Status,
                 Plan_Name = x.Plan_Name,
                 Project = x.Project,
-                Update_At = x.Update_At,
+                Update_At = x.Updated_At,
                 TotalInstallments = db.Installments.Where(a => a.Payment_Plan_Id == x.Payment_Plan_Id).ToList().Count(),
                 Updated_By = x.Updated_By,
 

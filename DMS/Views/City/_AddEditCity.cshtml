@@ -1,0 +1,55 @@
+﻿@model DMS.Models.ViewModels.CityViewModel
+@{
+    ViewData["Title"] = Model.Country_Id == 0 ? "Add City" : "Edit City";
+}
+<h2>@ViewData["Title"]</h2>
+<form id="cityForm" method="post">
+    <input type="hidden" asp-for="City_Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <div class="form-group">
+                <label asp-for="City_Name">Country Name</label>
+                <input asp-for="City_Name" class="form-control" />
+                <span asp-validation-for="City_Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-4">
+
+            <div class="form-group">
+                <label asp-for="Country_Id">Country</label>
+                <select asp-for="Country_Id" asp-items="ViewBag.Country" class="form-control">
+                    <option value="">Please Select</option> <!-- Optional default option -->
+                </select>
+                <span asp-validation-for="Country_Id" class="text-danger"></span>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <div class="form-group">
+                <label asp-for="Status_Active">Status</label>
+                <select asp-for="Status_Active" class="form-control">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <span asp-validation-for="Status_Active" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-12 mt-4">
+            <div class="mt-4">
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
